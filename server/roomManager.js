@@ -8,7 +8,7 @@ const COLORS = [
 
 let colorIndex = 0;
 
-async function addUser(roomId, socketId, username) {
+async function addUser(roomId, socketId, username, userId) {
   if (!rooms[roomId]) {
     let files = {
       "main.js": { code: "// Start coding here\n", language: "javascript" },
@@ -23,6 +23,12 @@ async function addUser(roomId, socketId, username) {
         if (project && project.files) {
           // Convert Mongoose Map to plain object
           files = Object.fromEntries(project.files.entries());
+          
+          // Add as collaborator if not owner
+          if (userId && project.owner.toString() !== userId && !project.collaborators.includes(userId)) {
+            project.collaborators.push(userId);
+            await project.save();
+          }
         }
       } catch (err) {
         console.error("Error fetching project:", err);

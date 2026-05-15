@@ -9,6 +9,7 @@ const roomManager = require('./roomManager');
 const { runCode } = require('./codeRunner');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const server = http.createServer(app);
@@ -47,11 +48,19 @@ io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // User joins a room
-  socket.on('join-room', async ({ roomId, username }) => {
+  socket.on('join-room', async ({ roomId, username, token }) => {
     socket.join(roomId);
 
+    let userId = null;
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.id;
+      } catch (err) {}
+    }
+
     // Add user to room
-    const color = await roomManager.addUser(roomId, socket.id, username);
+    const color = await roomManager.addUser(roomId, socket.id, username, userId);
     const files = roomManager.getFiles(roomId);
     const users = roomManager.getUsers(roomId);
 

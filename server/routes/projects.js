@@ -39,7 +39,12 @@ router.post('/create', verifyToken, async (req, res) => {
 // Get all projects for the logged in user
 router.get('/my-projects', verifyToken, async (req, res) => {
   try {
-    const projects = await Project.find({ owner: req.user.id }).sort({ updatedAt: -1 });
+    const projects = await Project.find({
+      $or: [
+        { owner: req.user.id },
+        { collaborators: req.user.id }
+      ]
+    }).sort({ updatedAt: -1 });
     res.json(projects);
   } catch (err) {
     res.status(500).json({ error: err.message });

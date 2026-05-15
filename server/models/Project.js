@@ -14,7 +14,8 @@ const ProjectSchema = new mongoose.Schema({
       "style.css": { code: "/* CSS here */\n", language: "css" }
     }
   },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Project', ProjectSchema);

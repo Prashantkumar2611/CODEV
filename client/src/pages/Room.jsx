@@ -32,7 +32,7 @@ export default function Room() {
     socket.connect();
 
     const handleConnect = () => {
-      socket.emit("join-room", { roomId, username });
+      socket.emit("join-room", { roomId, username, token: user?.token });
     };
 
     if (socket.connected) {
