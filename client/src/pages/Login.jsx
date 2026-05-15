@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await login(username, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Check your credentials.');
     }

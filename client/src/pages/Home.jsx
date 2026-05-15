@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
@@ -105,7 +105,9 @@ export default function Home() {
       </div>
 
       <div className="text-center mb-10">
-        <h1 className="text-white text-4xl font-bold mb-2">CollabCode</h1>
+        <Link to="/" className="inline-block hover:opacity-80 transition-opacity">
+          <h1 className="text-white text-4xl font-bold mb-2">CollabCode</h1>
+        </Link>
         <p className="text-gray-400">Welcome back, <span className="text-blue-400 font-semibold">{user?.username}</span></p>
       </div>
 

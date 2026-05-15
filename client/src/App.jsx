@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Room from "./pages/Room";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Landing from "./pages/Landing";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
@@ -20,7 +21,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/room/:roomId" element={<ProtectedRoute><Room /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>

@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { register } = useContext(AuthContext);
+  const { register, login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -14,8 +14,8 @@ export default function Register() {
     e.preventDefault();
     try {
       await register(username, password);
-      setSuccess('Registration successful! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 2000);
+      await login(username, password);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed.');
     }
