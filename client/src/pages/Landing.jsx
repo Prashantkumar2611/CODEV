@@ -191,7 +191,7 @@ export default function Landing() {
                   <div className="mb-[2px]"><span className="text-blue-400">const</span> io = <span className="text-blue-400">new</span> <span className="text-yellow-200">Server</span>(app);</div>
                   <br/>
                   <div className="mb-[2px]"><span className="text-gray-500 italic">// Real-time collaboration engine</span></div>
-                  <div className="mb-[2px]">io.<span className="text-yellow-200">on</span>(<span className="text-green-300">'connection'</span>, (socket) <span className="text-blue-400">=&gt;</span> {`{`}</div>
+                  <div className="mb-[2px]">io.<span className="text-yellow-200">on</span>(<span className="text-green-300">'connection'</span>, (socket) <span className="text-blue-400">=&gt;</span> {"{"}</div>
                   <div className="mb-[2px] ml-4 text-gray-500 italic">// Alex is typing...</div>
                   <div className="mb-[2px] ml-4 relative">
                     socket.<span className="text-yellow-200">join</span>(<span className="text-green-300">'workspace-1'</span>);
@@ -199,12 +199,12 @@ export default function Landing() {
                     <span className="absolute -top-3 -right-2 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded rounded-bl-none z-10 animate-pulse">Alex</span>
                     <span className="absolute top-0 -right-[2px] w-[2px] h-4 bg-green-500 animate-pulse"></span>
                   </div>
-                  <div className="mb-[2px] ml-4">console.<span className="text-yellow-200">log</span>(<span className="text-green-300">\`User connected: \${socket.id}\`</span>);</div>
-                  <div className="mb-[2px]">});</div>
+                  <div className="mb-[2px] ml-4">console.<span className="text-yellow-200">log</span>(<span className="text-green-300">`User connected: \${socket.id}`</span>);</div>
+                  <div className="mb-[2px]">{"});"}</div>
                   <br/>
-                  <div className="mb-[2px]">app.<span className="text-yellow-200">listen</span>(<span className="text-orange-300">3000</span>, () <span className="text-blue-400">=&gt;</span> {`{`}</div>
+                  <div className="mb-[2px]">app.<span className="text-yellow-200">listen</span>(<span className="text-orange-300">3000</span>, () <span className="text-blue-400">=&gt;</span> {"{"}</div>
                   <div className="mb-[2px] ml-4">console.<span className="text-yellow-200">log</span>(<span className="text-green-300">'Workspace live on port 3000'</span>);</div>
-                  <div className="mb-[2px]">});</div>
+                  <div className="mb-[2px]">{"});"}</div>
                 </div>
               </div>
             </div>
