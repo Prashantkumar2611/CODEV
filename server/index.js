@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const roomManager = require('./roomManager');
 const { runCode } = require('./codeRunner');
 const authRoutes = require('./routes/auth');
+const projectRoutes = require('./routes/projects');
 
 const app = express();
 const server = http.createServer(app);
@@ -28,6 +29,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('MongoDB Connection Error:', err));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
 
 // REST endpoint to run code
 app.post('/run-code', async (req, res) => {
@@ -45,11 +47,11 @@ io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // User joins a room
-  socket.on('join-room', ({ roomId, username }) => {
+  socket.on('join-room', async ({ roomId, username }) => {
     socket.join(roomId);
 
     // Add user to room
-    const color = roomManager.addUser(roomId, socket.id, username);
+    const color = await roomManager.addUser(roomId, socket.id, username);
     const currentCode = roomManager.getCode(roomId);
     const currentLanguage = roomManager.getLanguage(roomId);
     const users = roomManager.getUsers(roomId);
@@ -82,8 +84,8 @@ io.on('connection', (socket) => {
   });
 
   // User disconnects
-  socket.on('disconnect', () => {
-    const info = roomManager.removeUser(socket.id);
+  socket.on('disconnect', async () => {
+    const info = await roomManager.removeUser(socket.id);
     if (info) {
       const users = roomManager.getUsers(info.roomId);
       io.to(info.roomId).emit('user-left', {

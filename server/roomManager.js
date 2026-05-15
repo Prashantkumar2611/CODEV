@@ -1,3 +1,4 @@
+const Project = require('./models/Project');
 const rooms = {}; // All rooms stored in memory
 
 const COLORS = [
@@ -7,11 +8,27 @@ const COLORS = [
 
 let colorIndex = 0;
 
-function addUser(roomId, socketId, username) {
+async function addUser(roomId, socketId, username) {
   if (!rooms[roomId]) {
+    let code = "// Start coding here\n";
+    let language = "nodejs";
+
+    // If it looks like a MongoDB ObjectId, fetch from DB
+    if (roomId.length === 24) {
+      try {
+        const project = await Project.findById(roomId);
+        if (project) {
+          code = project.code;
+          language = project.language;
+        }
+      } catch (err) {
+        console.error("Error fetching project:", err);
+      }
+    }
+
     rooms[roomId] = {
-      code: "// Start coding here\n",
-      language: "nodejs", // JDoodle default
+      code,
+      language, // JDoodle default
       users: {}
     };
   }
@@ -23,7 +40,30 @@ function addUser(roomId, socketId, username) {
   return color;
 }
 
-function removeUser(socketId) {
+async function saveProject(roomId) {
+  if (roomId.length === 24 && rooms[roomId]) {
+    try {
+      await Project.findByIdAndUpdate(roomId, {
+        code: rooms[roomId].code,
+        language: rooms[roomId].language
+      });
+      // console.log(`Autosaved project ${roomId}`);
+    } catch (err) {
+      console.error(`Error saving project ${roomId}:`, err);
+    }
+  }
+}
+
+// Periodic autosave every 30 seconds
+setInterval(() => {
+  for (const roomId in rooms) {
+    if (roomId.length === 24 && Object.keys(rooms[roomId].users).length > 0) {
+      saveProject(roomId);
+    }
+  }
+}, 30000);
+
+async function removeUser(socketId) {
   for (const roomId in rooms) {
     if (rooms[roomId].users[socketId]) {
       const username = rooms[roomId].users[socketId].username;
@@ -31,6 +71,7 @@ function removeUser(socketId) {
 
       // Clean up empty rooms
       if (Object.keys(rooms[roomId].users).length === 0) {
+        await saveProject(roomId);
         delete rooms[roomId];
       }
       return { roomId, username };
