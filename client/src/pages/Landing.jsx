@@ -199,7 +199,7 @@ export default function Landing() {
                     <span className="absolute -top-3 -right-2 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded rounded-bl-none z-10 animate-pulse">Alex</span>
                     <span className="absolute top-0 -right-[2px] w-[2px] h-4 bg-green-500 animate-pulse"></span>
                   </div>
-                  <div className="mb-[2px] ml-4">console.<span className="text-yellow-200">log</span>(<span className="text-green-300">`User connected: \${socket.id}`</span>);</div>
+                  <div className="mb-[2px] ml-4">console.<span className="text-yellow-200">log</span>(<span className="text-green-300">{"`User connected: ${socket.id}`"}</span>);</div>
                   <div className="mb-[2px]">{"});"}</div>
                   <br/>
                   <div className="mb-[2px]">app.<span className="text-yellow-200">listen</span>(<span className="text-orange-300">3000</span>, () <span className="text-blue-400">=&gt;</span> {"{"}</div>
@@ -211,6 +211,64 @@ export default function Landing() {
           </motion.div>
         </motion.div>
       </main>
+
+      {/* Ideas from Replit implemented in 4K Dark Mode */}
+      
+      {/* Testimonials */}
+      <section className="relative z-10 max-w-[1200px] mx-auto px-6 py-10 mt-10">
+        <h3 className="text-center text-3xl font-bold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">Loved by teams worldwide</h3>
+        <div className="grid md:grid-cols-3 gap-8 text-white">
+          <div className="bg-[#0E131F]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-3 mb-6">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ismail" className="w-10 h-10 rounded-full bg-blue-500/20" alt="Avatar"/>
+              <div>
+                <h4 className="font-semibold text-[15px] text-gray-200">Ismail Pelaseyet</h4>
+                <p className="text-gray-500 text-xs tracking-wider uppercase font-semibold">CO-FOUNDER, SUPERAGENT.SH</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-[14px] leading-relaxed italic">
+              "We use CollabCode internally to prototype new types of Assistants before pushing them to production. It allows us to rapidly deploy."
+            </p>
+          </div>
+          <div className="bg-[#0E131F]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-3 mb-6">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=morgan" className="w-10 h-10 rounded-full bg-purple-500/20" alt="Avatar"/>
+              <div>
+                <h4 className="font-semibold text-[15px] text-gray-200">Morgan McGuire</h4>
+                <p className="text-gray-500 text-xs tracking-wider uppercase font-semibold">LEAD GROWTH ML</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-[14px] leading-relaxed italic">
+              "We needed to be able to collaborate on the codebase, which CollabCode allowed us to do instantly without setup."
+            </p>
+          </div>
+          <div className="bg-[#0E131F]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-3 mb-6">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=pietro" className="w-10 h-10 rounded-full bg-indigo-500/20" alt="Avatar"/>
+              <div>
+                <h4 className="font-semibold text-[15px] text-gray-200">Pietro Schirano</h4>
+                <p className="text-gray-500 text-xs tracking-wider uppercase font-semibold">CO-FOUNDER, EVERART</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-[14px] leading-relaxed italic">
+              "CollabCode extrapolates complex problems and takes care of all the mundane parts of coding. It's magic."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Idea to software, fast */}
+      <section className="relative z-10 py-24 text-center px-6">
+        <h2 className="text-[4rem] md:text-[6rem] font-bold tracking-tighter leading-none mb-10 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+          Idea to software, <br className="hidden md:block" />fast
+        </h2>
+        <button 
+          onClick={handleGetStarted}
+          className="bg-white text-black font-semibold text-lg px-10 py-4 rounded-lg hover:bg-gray-200 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+        >
+          Start building
+        </button>
+      </section>
 
       {/* Features Text Strip */}
       <section className="relative z-10 border-t border-white/5 bg-[#0E1525]/80 backdrop-blur-md">
