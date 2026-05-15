@@ -94,8 +94,14 @@ io.on('connection', (socket) => {
 
   // Create new file
   socket.on('create-file', ({ roomId, filename, language }) => {
-    roomManager.createFile(roomId, filename, language);
-    io.to(roomId).emit('file-created', { filename, language });
+    const creator = roomManager.createFile(roomId, socket.id, filename, language);
+    io.to(roomId).emit('file-created', { filename, language, creator });
+  });
+
+  // Delete file
+  socket.on('delete-file', ({ roomId, filename }) => {
+    roomManager.deleteFile(roomId, filename);
+    io.to(roomId).emit('file-deleted', { filename });
   });
 
   // User disconnects

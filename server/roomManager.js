@@ -11,7 +11,7 @@ let colorIndex = 0;
 async function addUser(roomId, socketId, username, userId) {
   if (!rooms[roomId]) {
     let files = {
-      "main.js": { code: "// Start coding here\n", language: "javascript" }
+      "main.js": { code: "// Start coding here\n", language: "javascript", creator: null }
     };
 
     // If it looks like a MongoDB ObjectId, fetch from DB
@@ -22,7 +22,7 @@ async function addUser(roomId, socketId, username, userId) {
           // Convert DB Array to a pure plain JS object
           files = {};
           for (const f of project.files) {
-            files[f.filename] = { code: f.code, language: f.language };
+            files[f.filename] = { code: f.code, language: f.language, creator: f.creator };
           }
         }
       } catch (err) {
@@ -64,7 +64,8 @@ async function saveProject(roomId) {
       const filesArray = Object.entries(rooms[roomId].files).map(([filename, data]) => ({
         filename,
         code: data.code,
-        language: data.language
+        language: data.language,
+        creator: data.creator
       }));
       await Project.findByIdAndUpdate(roomId, {
         files: filesArray
@@ -114,10 +115,13 @@ function updateActiveFile(roomId, socketId, filename) {
   }
 }
 
-function createFile(roomId, filename, language) {
+function createFile(roomId, socketId, filename, language) {
   if (rooms[roomId] && !rooms[roomId].files[filename]) {
-    rooms[roomId].files[filename] = { code: "", language };
+    const creator = rooms[roomId].users[socketId]?.username || "system";
+    rooms[roomId].files[filename] = { code: "", language, creator };
+    return creator;
   }
+  return null;
 }
 
 function deleteFile(roomId, filename) {

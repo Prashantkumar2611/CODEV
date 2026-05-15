@@ -1,7 +1,7 @@
 import MonacoEditor from "@monaco-editor/react";
 import { useRef, useEffect } from "react";
 
-export default function Editor({ code, language, onChange, roomId, socket, users, activeFile }) {
+export default function Editor({ code, language, onChange, roomId, socket, users, activeFile, isReadOnly }) {
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
   const decorationsRef = useRef(null); 
@@ -134,7 +134,8 @@ export default function Editor({ code, language, onChange, roomId, socket, users
         scrollBeyondLastLine: false,
         automaticLayout: true,
         tabSize: 2,
-        padding: { top: 16 }
+        padding: { top: 16 },
+        readOnly: isReadOnly
       }}
     />
   );

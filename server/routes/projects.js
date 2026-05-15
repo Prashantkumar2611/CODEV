@@ -26,7 +26,8 @@ router.post('/create', verifyToken, async (req, res) => {
 
     const newProject = new Project({
       name,
-      owner: req.user.id
+      owner: req.user.id,
+      files: [{ filename: "main.js", code: "// Start coding here\n", language: "javascript", creator: req.user.username }]
     });
 
     const savedProject = await newProject.save();

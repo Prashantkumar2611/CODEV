@@ -6,9 +6,10 @@ const ProjectSchema = new mongoose.Schema({
     type: [{
       filename: String,
       code: String,
-      language: String
+      language: String,
+      creator: String // Username of the creator
     }],
-    default: [{ filename: "main.js", code: "// Start coding here\n", language: "javascript" }]
+    default: [{ filename: "main.js", code: "// Start coding here\n", language: "javascript", creator: "system" }]
   },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
