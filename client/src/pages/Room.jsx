@@ -28,7 +28,16 @@ export default function Room() {
 
   useEffect(() => {
     socket.connect();
-    socket.emit("join-room", { roomId, username });
+
+    const handleConnect = () => {
+      socket.emit("join-room", { roomId, username });
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    }
+    
+    socket.on("connect", handleConnect);
 
     // Receive current room state when joining
     socket.on("room-state", ({ code, language, users }) => {
@@ -55,9 +64,10 @@ export default function Room() {
     });
 
     return () => {
+      socket.off("connect", handleConnect);
       socket.disconnect();
     };
-  }, [roomId]);
+  }, [roomId, username]);
 
   const handleCodeChange = (newCode) => {
     // Don't emit back if this was a remote update
@@ -129,6 +139,9 @@ export default function Room() {
               code={code}
               language={language.name.toLowerCase()}
               onChange={handleCodeChange}
+              roomId={roomId}
+              socket={socket}
+              users={users}
             />
           </div>
           <Output output={output} />

@@ -70,6 +70,11 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('code-update', { code });
   });
 
+  // Cursor moved
+  socket.on('cursor-change', ({ roomId, position }) => {
+    socket.to(roomId).emit('cursor-update', { userId: socket.id, position });
+  });
+
   // Language changed
   socket.on('language-change', ({ roomId, languageId, languageName }) => {
     roomManager.updateLanguage(roomId, languageId);
