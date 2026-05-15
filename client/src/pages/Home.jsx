@@ -80,12 +80,29 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center relative p-6">
-      <button 
-        onClick={logout}
-        className="absolute top-6 right-6 text-gray-400 hover:text-white font-medium bg-gray-800 px-4 py-2 rounded transition-colors"
-      >
-        Logout ({user?.username})
-      </button>
+      <div className="absolute top-6 right-6 flex flex-col items-end">
+        <button 
+          onClick={() => {
+            if (confirm("Are you sure you want to logout?")) {
+              logout();
+            }
+          }}
+          className="relative group rounded-full ring-2 ring-gray-700 hover:ring-blue-500 transition-all shadow-lg hover:shadow-blue-500/20"
+          title={`Logout (${user?.username})`}
+        >
+          <img 
+            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
+            alt={user?.username}
+            className="w-12 h-12 rounded-full bg-[#E8E8E8] object-cover"
+          />
+          <div className="absolute -bottom-0.5 -right-0.5 bg-gray-900 rounded-full flex items-center justify-center p-[2px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+              <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="3" />
+            </svg>
+          </div>
+        </button>
+      </div>
 
       <div className="text-center mb-10">
         <h1 className="text-white text-4xl font-bold mb-2">CollabCode</h1>
