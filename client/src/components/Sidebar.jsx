@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ users, roomId }) {
+export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function Sidebar({ users, roomId }) {
 
   return (
     <div className="w-64 bg-gray-800 border-r border-gray-700 p-5 flex flex-col font-sans">
-      <h2 className="text-xl font-bold text-white mb-6">CollabCode</h2>
+      <h2 className="text-xl font-bold text-white mb-6">CODEV</h2>
 
       <button 
         onClick={() => setShowInvite(!showInvite)}
@@ -60,7 +60,22 @@ export default function Sidebar({ users, roomId }) {
         </div>
       )}
 
-      <div className="flex justify-between items-center mb-4 mt-2">
+      <div className="mb-6">
+        <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-2">Files</p>
+        <div className="space-y-1">
+          {Object.keys(files).map(filename => (
+            <button
+              key={filename}
+              onClick={() => onFileSelect(filename)}
+              className={`w-full text-left px-3 py-1.5 rounded text-sm font-medium transition-colors ${activeFile === filename ? 'bg-blue-600/20 text-blue-400 border border-blue-600/30' : 'text-gray-400 hover:bg-gray-700 hover:text-white border border-transparent'}`}
+            >
+              {filename}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center mb-4 mt-auto">
         <p className="text-gray-400 text-xs uppercase font-bold tracking-wider">Online</p>
         <span className="bg-gray-700 text-white text-xs font-bold px-2.5 py-1 rounded-full">{users.length}</span>
       </div>
@@ -72,7 +87,10 @@ export default function Sidebar({ users, roomId }) {
               className="w-3 h-3 rounded-full flex-shrink-0"
               style={{ backgroundColor: user.color, boxShadow: `0 0 8px ${user.color}` }}
             />
-            <span className="text-sm font-medium text-gray-200 truncate">{user.username}</span>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-sm font-medium text-gray-200 truncate">{user.username}</span>
+              {user.activeFile && <span className="text-[10px] text-gray-500 truncate">in {user.activeFile}</span>}
+            </div>
           </div>
         ))}
       </div>

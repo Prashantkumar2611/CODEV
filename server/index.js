@@ -52,12 +52,11 @@ io.on('connection', (socket) => {
 
     // Add user to room
     const color = await roomManager.addUser(roomId, socket.id, username);
-    const currentCode = roomManager.getCode(roomId);
-    const currentLanguage = roomManager.getLanguage(roomId);
+    const files = roomManager.getFiles(roomId);
     const users = roomManager.getUsers(roomId);
 
     // Send current state to the new user
-    socket.emit('room-state', { code: currentCode, language: currentLanguage, users });
+    socket.emit('room-state', { files, users });
 
     // Tell everyone else a new user joined
     socket.to(roomId).emit('user-joined', { userId: socket.id, username, color, users });
@@ -65,22 +64,23 @@ io.on('connection', (socket) => {
     console.log(`${username} joined room ${roomId}`);
   });
 
-  // Someone typed something
-  socket.on('code-change', ({ roomId, code }) => {
-    roomManager.updateCode(roomId, code);
+  // Someone typed something in a file
+  socket.on('code-change', ({ roomId, filename, code }) => {
+    roomManager.updateCode(roomId, filename, code);
     // Send to everyone EXCEPT the sender
-    socket.to(roomId).emit('code-update', { code });
+    socket.to(roomId).emit('code-update', { filename, code });
   });
 
-  // Cursor moved
-  socket.on('cursor-change', ({ roomId, position }) => {
-    socket.to(roomId).emit('cursor-update', { userId: socket.id, position });
+  // Cursor moved in a file
+  socket.on('cursor-change', ({ roomId, filename, position }) => {
+    socket.to(roomId).emit('cursor-update', { userId: socket.id, filename, position });
   });
 
-  // Language changed
-  socket.on('language-change', ({ roomId, languageId, languageName }) => {
-    roomManager.updateLanguage(roomId, languageId);
-    socket.to(roomId).emit('language-update', { languageId, languageName });
+  // User switched active file
+  socket.on('active-file-change', ({ roomId, filename }) => {
+    roomManager.updateActiveFile(roomId, socket.id, filename);
+    const users = roomManager.getUsers(roomId);
+    io.to(roomId).emit('user-joined', { users }); // Broadcast updated users list so everyone knows who is on what file
   });
 
   // User disconnects

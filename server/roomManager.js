@@ -10,16 +10,19 @@ let colorIndex = 0;
 
 async function addUser(roomId, socketId, username) {
   if (!rooms[roomId]) {
-    let code = "// Start coding here\n";
-    let language = "nodejs";
+    let files = {
+      "main.js": { code: "// Start coding here\n", language: "javascript" },
+      "index.html": { code: "<!-- HTML here -->\n", language: "html" },
+      "style.css": { code: "/* CSS here */\n", language: "css" }
+    };
 
     // If it looks like a MongoDB ObjectId, fetch from DB
     if (roomId.length === 24) {
       try {
         const project = await Project.findById(roomId);
-        if (project) {
-          code = project.code;
-          language = project.language;
+        if (project && project.files) {
+          // Convert Mongoose Map to plain object
+          files = Object.fromEntries(project.files.entries());
         }
       } catch (err) {
         console.error("Error fetching project:", err);
@@ -27,8 +30,7 @@ async function addUser(roomId, socketId, username) {
     }
 
     rooms[roomId] = {
-      code,
-      language, // JDoodle default
+      files,
       users: {}
     };
   }
@@ -36,7 +38,8 @@ async function addUser(roomId, socketId, username) {
   const color = COLORS[colorIndex % COLORS.length];
   colorIndex++;
 
-  rooms[roomId].users[socketId] = { username, color };
+  const activeFile = Object.keys(rooms[roomId].files)[0]; // Default to first file
+  rooms[roomId].users[socketId] = { username, color, activeFile };
   return color;
 }
 
@@ -44,8 +47,7 @@ async function saveProject(roomId) {
   if (roomId.length === 24 && rooms[roomId]) {
     try {
       await Project.findByIdAndUpdate(roomId, {
-        code: rooms[roomId].code,
-        language: rooms[roomId].language
+        files: rooms[roomId].files
       });
       // console.log(`Autosaved project ${roomId}`);
     } catch (err) {
@@ -80,20 +82,20 @@ async function removeUser(socketId) {
   return null;
 }
 
-function updateCode(roomId, code) {
-  if (rooms[roomId]) rooms[roomId].code = code;
+function updateCode(roomId, filename, code) {
+  if (rooms[roomId] && rooms[roomId].files[filename]) {
+    rooms[roomId].files[filename].code = code;
+  }
 }
 
-function updateLanguage(roomId, languageId) {
-  if (rooms[roomId]) rooms[roomId].language = languageId;
+function updateActiveFile(roomId, socketId, filename) {
+  if (rooms[roomId] && rooms[roomId].users[socketId]) {
+    rooms[roomId].users[socketId].activeFile = filename;
+  }
 }
 
-function getCode(roomId) {
-  return rooms[roomId]?.code || "// Start coding here\n";
-}
-
-function getLanguage(roomId) {
-  return rooms[roomId]?.language || "nodejs";
+function getFiles(roomId) {
+  return rooms[roomId]?.files || {};
 }
 
 function getUsers(roomId) {
@@ -104,6 +106,6 @@ function getUsers(roomId) {
 }
 
 module.exports = {
-  addUser, removeUser, updateCode,
-  updateLanguage, getCode, getLanguage, getUsers
+  addUser, removeUser, updateCode, updateActiveFile,
+  getFiles, getUsers
 };

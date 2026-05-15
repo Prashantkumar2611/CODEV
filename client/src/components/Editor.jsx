@@ -1,7 +1,7 @@
 import MonacoEditor from "@monaco-editor/react";
 import { useRef, useEffect } from "react";
 
-export default function Editor({ code, language, onChange, roomId, socket, users }) {
+export default function Editor({ code, language, onChange, roomId, socket, users, activeFile }) {
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
   const decorationsRef = useRef(null); 
@@ -12,9 +12,10 @@ export default function Editor({ code, language, onChange, roomId, socket, users
 
     // Listen to local cursor movement and broadcast it
     editor.onDidChangeCursorPosition((e) => {
-      if (socket && roomId) {
+      if (socket && roomId && activeFile) {
         socket.emit("cursor-change", {
           roomId,
+          filename: activeFile,
           position: e.position
         });
       }
@@ -37,8 +38,12 @@ export default function Editor({ code, language, onChange, roomId, socket, users
       if (!decorationsRef.current) return;
       const newDecorations = [];
 
-      for (const [userId, position] of Object.entries(remoteCursors)) {
+      for (const [userId, cursorData] of Object.entries(remoteCursors)) {
+        if (cursorData.filename !== activeFile) continue; // Only show cursor if they are on the same file!
+        
         const user = users.find(u => u.id === userId);
+        const position = cursorData.position;
+        
         if (user && position) {
           const color = user.color || '#4ECDC4';
           
@@ -91,8 +96,8 @@ export default function Editor({ code, language, onChange, roomId, socket, users
       decorationsRef.current.set(newDecorations);
     };
 
-    const handleCursorUpdate = ({ userId, position }) => {
-      remoteCursors[userId] = position;
+    const handleCursorUpdate = ({ userId, filename, position }) => {
+      remoteCursors[userId] = { filename, position };
       updateDecorations();
     };
 
@@ -113,7 +118,7 @@ export default function Editor({ code, language, onChange, roomId, socket, users
       socket.off('cursor-update', handleCursorUpdate);
       socket.off('user-left', handleUserLeft);
     };
-  }, [socket, users]);
+  }, [socket, users, activeFile]);
 
   return (
     <MonacoEditor
