@@ -27,6 +27,8 @@ export default function Room() {
   const [users, setUsers] = useState([]);
   const [running, setRunning] = useState(false);
   const isRemoteUpdate = useRef(false);
+  
+  const isProject = roomId && roomId.length === 24;
 
   useEffect(() => {
     socket.connect();
@@ -160,13 +162,14 @@ export default function Room() {
         activeFile={activeFile} 
         onFileSelect={handleFileSelect} 
         onAddFile={handleAddFile}
+        isProject={isProject}
       />
 
       <div className="flex-1 flex flex-col">
         {/* Top bar */}
         <div className="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
           <div className="flex items-center gap-4">
-            <span className="text-gray-400 font-medium">{activeFile}</span>
+            {isProject && <span className="text-gray-400 font-medium">{activeFile}</span>}
             <span className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-300 uppercase">
               {activeFileData.language}
             </span>
