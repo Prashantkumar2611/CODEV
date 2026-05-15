@@ -4,21 +4,30 @@ require('dotenv').config();
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
+const mongoose = require('mongoose');
 const roomManager = require('./roomManager');
 const { runCode } = require('./codeRunner');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // React dev server
+    origin: "*", // Allow any frontend (like Vercel)
     methods: ["GET", "POST"]
   }
 });
 
 app.use(cors());
 app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB Connected successfully!'))
+  .catch(err => console.error('MongoDB Connection Error:', err));
+
+app.use('/api/auth', authRoutes);
 
 // REST endpoint to run code
 app.post('/run-code', async (req, res) => {
