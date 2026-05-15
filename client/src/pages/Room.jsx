@@ -27,7 +27,12 @@ export default function Room() {
   const [users, setUsers] = useState([]);
   const [running, setRunning] = useState(false);
   const isRemoteUpdate = useRef(false);
+  const activeFileRef = useRef(activeFile);
   
+  useEffect(() => {
+    activeFileRef.current = activeFile;
+  }, [activeFile]);
+
   const isProject = roomId && roomId.length === 24;
 
   useEffect(() => {
@@ -49,8 +54,13 @@ export default function Room() {
       setUsers(users);
       if (Object.keys(files).length > 0) {
         const defaultFile = Object.keys(files)[0];
-        setActiveFile(defaultFile);
-        socket.emit("active-file-change", { roomId, filename: defaultFile });
+        setActiveFile(prev => {
+          if (!prev || !files[prev]) {
+            socket.emit("active-file-change", { roomId, filename: defaultFile });
+            return defaultFile;
+          }
+          return prev;
+        });
       }
     });
 
@@ -58,7 +68,7 @@ export default function Room() {
     socket.on("code-update", ({ filename, code }) => {
       setFiles(prev => {
         // If the update is for the file we are currently looking at, block local echo
-        if (filename === activeFile) {
+        if (filename === activeFileRef.current) {
           isRemoteUpdate.current = true;
         }
         return {
@@ -110,7 +120,7 @@ export default function Room() {
       socket.off("connect", handleConnect);
       socket.disconnect();
     };
-  }, [roomId, username, activeFile]); // activeFile in dependency so closure gets latest for isRemoteUpdate logic
+  }, [roomId, username]); 
 
   const handleCodeChange = (newCode) => {
     // Don't emit back if this was a remote update
