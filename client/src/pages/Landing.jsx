@@ -48,9 +48,7 @@ export default function Landing() {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-3 cursor-pointer"
         >
-          <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-            <span className="text-[#0E1525] font-black text-xl leading-none tracking-tighter">C</span>
-          </div>
+          <img src="/favicon.svg" alt="CollabCode Logo" className="w-10 h-10 object-contain" />
           <span className="text-xl font-bold tracking-tight">CollabCode</span>
         </motion.div>
         <motion.div 

@@ -106,7 +106,10 @@ export default function Home() {
 
       <div className="text-center mb-10">
         <Link to="/" className="inline-block hover:opacity-80 transition-opacity">
-          <h1 className="text-white text-4xl font-bold mb-2">CollabCode</h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <img src="/favicon.svg" alt="Logo" className="w-10 h-10" />
+            <h1 className="text-white text-4xl font-bold">CollabCode</h1>
+          </div>
         </Link>
         <p className="text-gray-400">Welcome back, <span className="text-blue-400 font-semibold">{user?.username}</span></p>
       </div>
