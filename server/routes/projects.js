@@ -52,4 +52,22 @@ router.get('/my-projects', verifyToken, async (req, res) => {
   }
 });
 
+// Delete a project
+router.delete('/:id', verifyToken, async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    
+    // Check if user is the owner
+    if (project.owner.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Only the project owner can delete this project' });
+    }
+
+    await Project.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Project deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

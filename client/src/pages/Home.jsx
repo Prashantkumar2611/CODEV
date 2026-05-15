@@ -63,6 +63,21 @@ export default function Home() {
     navigate(`/room/${finalRoomId}`);
   };
 
+  const handleDeleteProject = async (e, projectId, projectName) => {
+    e.stopPropagation(); // Prevent navigating to the room
+    if (confirm(`Are you sure you want to delete the project "${projectName}"? This action cannot be undone.`)) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`${import.meta.env.VITE_SERVER_URL || ''}/api/projects/${projectId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setProjects(prev => prev.filter(p => p._id !== projectId));
+      } catch (err) {
+        alert(err.response?.data?.error || "Failed to delete project");
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center relative p-6">
       <button 
@@ -146,17 +161,27 @@ export default function Home() {
             ) : (
               <div className="space-y-2">
                 {projects.map(proj => (
-                  <button
-                    key={proj._id}
-                    onClick={() => navigate(`/room/${proj._id}`)}
-                    className="w-full text-left bg-gray-800 hover:bg-gray-700 p-4 rounded-lg border border-gray-700 hover:border-gray-500 transition-all group flex items-center justify-between"
-                  >
-                    <div>
-                      <h3 className="text-white font-medium group-hover:text-blue-400 transition-colors">{proj.name}</h3>
-                      <p className="text-xs text-gray-500 mt-1">Language: <span className="text-gray-400">{proj.language}</span></p>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 group-hover:text-white transition-colors"><polyline points="9 18 15 12 9 6"/></svg>
-                  </button>
+                  <div key={proj._id} className="relative group w-full">
+                    <button
+                      onClick={() => navigate(`/room/${proj._id}`)}
+                      className="w-full text-left bg-gray-800 hover:bg-gray-700 p-4 rounded-lg border border-gray-700 hover:border-gray-500 transition-all flex items-center justify-between pr-12"
+                    >
+                      <div>
+                        <h3 className="text-white font-medium group-hover:text-blue-400 transition-colors">{proj.name}</h3>
+                        <p className="text-xs text-gray-500 mt-1">Files: <span className="text-gray-400">{proj.files?.length || 0}</span></p>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 group-hover:text-white transition-colors"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    {proj.owner === user?.id && (
+                      <button
+                        onClick={(e) => handleDeleteProject(e, proj._id, proj.name)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all z-10"
+                        title="Delete Project"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
