@@ -45,8 +45,14 @@ router.get('/my-projects', verifyToken, async (req, res) => {
         { owner: req.user.id },
         { collaborators: req.user.id }
       ]
-    }).sort({ updatedAt: -1 });
-    res.json(projects);
+    }).sort({ updatedAt: -1 }).lean();
+
+    const projectsWithOwnership = projects.map(p => ({
+      ...p,
+      isOwner: p.owner.toString() === req.user.id
+    }));
+
+    res.json(projectsWithOwnership);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -172,7 +172,7 @@ export default function Home() {
                       </div>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 group-hover:text-white transition-colors"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
-                    {proj.owner === user?.id && (
+                    {proj.isOwner && (
                       <button
                         onClick={(e) => handleDeleteProject(e, proj._id, proj.name)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all z-10"
