@@ -79,13 +79,16 @@ export default function Room() {
       setFiles(prev => {
         const newFiles = { ...prev };
         delete newFiles[filename];
+        
+        setActiveFile(prevActive => {
+          if (prevActive === filename) {
+            const remaining = Object.keys(newFiles);
+            return remaining.length > 0 ? remaining[0] : "";
+          }
+          return prevActive;
+        });
+
         return newFiles;
-      });
-      setActiveFile(prevActive => {
-        if (prevActive === filename) {
-          return "main.js"; // Fallback to main.js if active file deleted
-        }
-        return prevActive;
       });
     });
 
@@ -152,12 +155,14 @@ export default function Room() {
       setFiles(prev => {
         const newFiles = { ...prev };
         delete newFiles[filename];
+        
+        if (activeFile === filename) {
+          const remaining = Object.keys(newFiles);
+          handleFileSelect(remaining.length > 0 ? remaining[0] : "");
+        }
+
         return newFiles;
       });
-      
-      if (activeFile === filename) {
-        handleFileSelect("main.js"); // Fallback to main.js
-      }
     }
   };
 
