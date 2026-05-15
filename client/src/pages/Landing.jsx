@@ -16,13 +16,29 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0E1525] text-white overflow-hidden relative font-sans">
+    <div className="min-h-screen bg-[#06080F] text-white overflow-hidden relative font-sans">
       {/* Aurora Glowing Orbs */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/30 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-purple-600/20 blur-[150px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[150px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"></div>
       
+      {/* 4K AI 3D Glassmorphic Assets */}
+      <motion.img 
+        src="/assets/hero-3d.png" 
+        alt="3D Floating Orbs"
+        animate={{ y: [-30, 30, -30], rotate: [0, 10, 0] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-0 right-[-10%] w-[800px] h-auto opacity-40 mix-blend-screen pointer-events-none blur-[2px]"
+      />
+      <motion.img 
+        src="/assets/hero-3d.png" 
+        alt="3D Floating Orbs"
+        animate={{ y: [30, -30, 30], rotate: [0, -15, 0], scale: [0.8, 0.9, 0.8] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[-10%] left-[-15%] w-[1000px] h-auto opacity-30 mix-blend-screen pointer-events-none blur-[4px]"
+      />
+
       {/* Subtle Dotted Grid Background */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 pointer-events-none"></div>
 
       {/* Navigation */}
       <nav className="relative z-20 flex justify-between items-center p-6 lg:px-12 max-w-[1400px] mx-auto">
@@ -75,20 +91,20 @@ export default function Landing() {
         <motion.h1 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold tracking-tighter leading-[1.1] mb-6"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-5xl md:text-[5rem] lg:text-[6.5rem] font-bold tracking-tighter leading-[1.05] mb-6 relative z-10"
         >
-          Build software<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">faster. Together.</span>
+          Code with your team,<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300">live.</span>
         </motion.h1>
 
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-xl md:text-2xl text-gray-400 mb-10 max-w-3xl font-light"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl font-light relative z-10"
         >
-          Create, compile, and collaborate in real-time. Instantly boot up collaborative coding environments in your browser.
+          The most immersive collaborative coding environment. Jump into a project and build together in real-time.
         </motion.p>
 
         <motion.div
@@ -108,14 +124,17 @@ export default function Landing() {
         <motion.div 
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 50 }}
-          className="mt-20 w-full max-w-5xl perspective-1000"
+          transition={{ duration: 1, delay: 0.4, type: "spring", stiffness: 40 }}
+          className="mt-20 w-full max-w-5xl perspective-1000 relative z-10"
         >
           <motion.div 
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="rounded-xl overflow-hidden border border-white/10 bg-[#1C2333]/80 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7),0_0_40px_rgba(59,130,246,0.15)] flex flex-col"
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="rounded-xl overflow-hidden border border-white/10 bg-[#0E131F]/60 backdrop-blur-3xl shadow-[0_30px_100px_-15px_rgba(0,0,0,1),0_0_80px_rgba(59,130,246,0.2)] flex flex-col relative"
           >
+            {/* Glowing borders */}
+            <div className="absolute inset-0 border border-blue-500/10 rounded-xl pointer-events-none"></div>
+            
             {/* Window Header */}
             <div className="flex items-center px-4 py-3 border-b border-white/5 bg-[#1C2333]">
               <div className="flex gap-2">
