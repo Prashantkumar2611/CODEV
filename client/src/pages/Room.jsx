@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useEffect, useState, useRef, useContext } from "react";
+import { useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 import Sidebar from "../components/Sidebar";
 import Output from "../components/Output";
 import socket from "../socket";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 const LANGUAGES = [
   { id: "nodejs", name: "JavaScript" },
@@ -15,8 +16,8 @@ const LANGUAGES = [
 
 export default function Room() {
   const { roomId } = useParams();
-  const { state } = useLocation();
-  const username = state?.username || "Anonymous";
+  const { user } = useContext(AuthContext);
+  const username = user?.username || "Anonymous";
 
   const [code, setCode] = useState("// Start coding here\n");
   const [language, setLanguage] = useState(LANGUAGES[0]);
