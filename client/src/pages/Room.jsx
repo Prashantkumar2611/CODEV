@@ -92,6 +92,16 @@ export default function Room() {
       });
     });
 
+    socket.on("language-change", ({ filename, language }) => {
+      setFiles(prev => {
+        if (!prev[filename]) return prev;
+        return {
+          ...prev,
+          [filename]: { ...prev[filename], language }
+        };
+      });
+    });
+
     // Users update
     socket.on("user-joined", ({ users }) => setUsers(users));
     socket.on("user-left", ({ users }) => setUsers(users));
@@ -166,6 +176,15 @@ export default function Room() {
     }
   };
 
+  const handleLanguageChange = (e) => {
+    const newLang = e.target.value;
+    socket.emit("language-change", { roomId, filename: activeFile, language: newLang });
+    setFiles(prev => ({
+      ...prev,
+      [activeFile]: { ...prev[activeFile], language: newLang }
+    }));
+  };
+
   const activeFileData = files[activeFile] || { code: "// Loading...", language: "javascript", creator: null };
   const isReadOnly = isProject && activeFileData.creator && activeFileData.creator !== username;
 
@@ -217,9 +236,19 @@ export default function Room() {
                 )}
               </div>
             )}
-            <span className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-300 uppercase">
-              {activeFileData.language}
-            </span>
+            <select
+              value={activeFileData.language}
+              onChange={handleLanguageChange}
+              disabled={isReadOnly}
+              className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-300 uppercase outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="javascript">JavaScript (Node)</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="html">HTML</option>
+              <option value="css">CSS</option>
+            </select>
           </div>
 
           <button

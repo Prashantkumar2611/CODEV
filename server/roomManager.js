@@ -130,6 +130,12 @@ function deleteFile(roomId, filename) {
   }
 }
 
+function updateFileLanguage(roomId, filename, language) {
+  if (rooms[roomId] && rooms[roomId].files[filename]) {
+    rooms[roomId].files[filename].language = language;
+  }
+}
+
 function getFiles(roomId) {
   return rooms[roomId]?.files || {};
 }
@@ -143,5 +149,5 @@ function getUsers(roomId) {
 
 module.exports = {
   addUser, removeUser, updateCode, updateActiveFile,
-  createFile, deleteFile, getFiles, getUsers
+  createFile, deleteFile, getFiles, getUsers, updateFileLanguage
 };

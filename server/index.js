@@ -104,6 +104,12 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('file-deleted', { filename });
   });
 
+  // Change language
+  socket.on('language-change', ({ roomId, filename, language }) => {
+    roomManager.updateFileLanguage(roomId, filename, language);
+    socket.to(roomId).emit('language-change', { filename, language });
+  });
+
   // User disconnects
   socket.on('disconnect', async () => {
     const info = await roomManager.removeUser(socket.id);
