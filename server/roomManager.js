@@ -21,14 +21,10 @@ async function addUser(roomId, socketId, username, userId) {
       try {
         const project = await Project.findById(roomId);
         if (project && project.files) {
-          // Convert Mongoose Map to plain object
-          files = Object.fromEntries(project.files.entries());
-          
-          // Add as collaborator if not owner
-          if (userId && project.owner.toString() !== userId && !project.collaborators.includes(userId)) {
-            project.collaborators.push(userId);
-            await project.save();
-          }
+          // Convert Mongoose Map to a pure plain JS object
+          files = Object.fromEntries(
+            Array.from(project.files.entries()).map(([k, v]) => [k, { code: v.code, language: v.language }])
+          );
         }
       } catch (err) {
         console.error("Error fetching project:", err);
@@ -39,6 +35,20 @@ async function addUser(roomId, socketId, username, userId) {
       files,
       users: {}
     };
+  }
+
+  // Add as collaborator if not owner (fire and forget, runs even if room is already in memory)
+  if (roomId.length === 24 && userId) {
+    Project.findById(roomId).then(project => {
+      if (project) {
+        const isOwner = project.owner.toString() === userId;
+        const isCollaborator = project.collaborators.some(id => id.toString() === userId);
+        if (!isOwner && !isCollaborator) {
+          project.collaborators.push(userId);
+          project.save().catch(err => console.error("Error saving collaborator:", err));
+        }
+      }
+    }).catch(err => console.error("Error checking collaborators:", err));
   }
 
   const color = COLORS[colorIndex % COLORS.length];
