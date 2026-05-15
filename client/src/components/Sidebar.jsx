@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar({ users, roomId }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
+  const navigate = useNavigate();
 
   const copyLink = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -73,6 +75,16 @@ export default function Sidebar({ users, roomId }) {
             <span className="text-sm font-medium text-gray-200 truncate">{user.username}</span>
           </div>
         ))}
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-gray-700">
+        <button
+          onClick={() => navigate('/')}
+          className="w-full bg-red-600/20 border border-red-600/50 hover:bg-red-600 hover:text-white text-red-400 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Leave Room
+        </button>
       </div>
     </div>
   );
