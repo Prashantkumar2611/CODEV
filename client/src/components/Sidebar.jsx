@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect }) {
+export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
@@ -61,7 +61,16 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
       )}
 
       <div className="mb-6">
-        <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-2">Files</p>
+        <div className="flex justify-between items-center mb-2">
+          <p className="text-gray-400 text-xs uppercase font-bold tracking-wider">Files</p>
+          <button 
+            onClick={onAddFile}
+            className="text-gray-400 hover:text-white p-1 rounded hover:bg-gray-700 transition-colors"
+            title="New File"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
         <div className="space-y-1">
           {Object.keys(files).map(filename => (
             <button

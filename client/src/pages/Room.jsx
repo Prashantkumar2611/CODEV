@@ -66,6 +66,13 @@ export default function Room() {
       });
     });
 
+    socket.on("file-created", ({ filename, language }) => {
+      setFiles(prev => ({
+        ...prev,
+        [filename]: { code: "", language }
+      }));
+    });
+
     // Users update
     socket.on("user-joined", ({ users }) => setUsers(users));
     socket.on("user-left", ({ users }) => setUsers(users));
@@ -94,6 +101,32 @@ export default function Room() {
   const handleFileSelect = (filename) => {
     setActiveFile(filename);
     socket.emit("active-file-change", { roomId, filename });
+  };
+
+  const handleAddFile = () => {
+    const filename = prompt("Enter new filename (e.g., script.js, utils.py):");
+    if (!filename || filename.trim() === "") return;
+    if (files[filename]) {
+      alert("File already exists!");
+      return;
+    }
+    
+    let ext = filename.split('.').pop().toLowerCase();
+    let language = "javascript";
+    if (ext === "py") language = "python";
+    if (ext === "cpp") language = "cpp";
+    if (ext === "java") language = "java";
+    if (ext === "html") language = "html";
+    if (ext === "css") language = "css";
+
+    socket.emit("create-file", { roomId, filename, language });
+    
+    // Optimistically update local state
+    setFiles(prev => ({
+      ...prev,
+      [filename]: { code: "", language }
+    }));
+    handleFileSelect(filename);
   };
 
   const activeFileData = files[activeFile] || { code: "// Loading...", language: "javascript" };
@@ -126,6 +159,7 @@ export default function Room() {
         files={files} 
         activeFile={activeFile} 
         onFileSelect={handleFileSelect} 
+        onAddFile={handleAddFile}
       />
 
       <div className="flex-1 flex flex-col">

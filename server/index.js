@@ -92,6 +92,12 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('user-joined', { users }); // Broadcast updated users list so everyone knows who is on what file
   });
 
+  // Create new file
+  socket.on('create-file', ({ roomId, filename, language }) => {
+    roomManager.createFile(roomId, filename, language);
+    io.to(roomId).emit('file-created', { filename, language });
+  });
+
   // User disconnects
   socket.on('disconnect', async () => {
     const info = await roomManager.removeUser(socket.id);

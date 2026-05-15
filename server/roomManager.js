@@ -11,9 +11,7 @@ let colorIndex = 0;
 async function addUser(roomId, socketId, username, userId) {
   if (!rooms[roomId]) {
     let files = {
-      "main.js": { code: "// Start coding here\n", language: "javascript" },
-      "index.html": { code: "<!-- HTML here -->\n", language: "html" },
-      "style.css": { code: "/* CSS here */\n", language: "css" }
+      "main.js": { code: "// Start coding here\n", language: "javascript" }
     };
 
     // If it looks like a MongoDB ObjectId, fetch from DB
@@ -21,10 +19,11 @@ async function addUser(roomId, socketId, username, userId) {
       try {
         const project = await Project.findById(roomId);
         if (project && project.files) {
-          // Convert Mongoose Map to a pure plain JS object
-          files = Object.fromEntries(
-            Array.from(project.files.entries()).map(([k, v]) => [k, { code: v.code, language: v.language }])
-          );
+          // Convert DB Array to a pure plain JS object
+          files = {};
+          for (const f of project.files) {
+            files[f.filename] = { code: f.code, language: f.language };
+          }
         }
       } catch (err) {
         console.error("Error fetching project:", err);
@@ -62,8 +61,13 @@ async function addUser(roomId, socketId, username, userId) {
 async function saveProject(roomId) {
   if (roomId.length === 24 && rooms[roomId]) {
     try {
+      const filesArray = Object.entries(rooms[roomId].files).map(([filename, data]) => ({
+        filename,
+        code: data.code,
+        language: data.language
+      }));
       await Project.findByIdAndUpdate(roomId, {
-        files: rooms[roomId].files
+        files: filesArray
       });
       // console.log(`Autosaved project ${roomId}`);
     } catch (err) {
@@ -110,6 +114,18 @@ function updateActiveFile(roomId, socketId, filename) {
   }
 }
 
+function createFile(roomId, filename, language) {
+  if (rooms[roomId] && !rooms[roomId].files[filename]) {
+    rooms[roomId].files[filename] = { code: "", language };
+  }
+}
+
+function deleteFile(roomId, filename) {
+  if (rooms[roomId] && rooms[roomId].files[filename]) {
+    delete rooms[roomId].files[filename];
+  }
+}
+
 function getFiles(roomId) {
   return rooms[roomId]?.files || {};
 }
@@ -123,5 +139,5 @@ function getUsers(roomId) {
 
 module.exports = {
   addUser, removeUser, updateCode, updateActiveFile,
-  getFiles, getUsers
+  createFile, deleteFile, getFiles, getUsers
 };
