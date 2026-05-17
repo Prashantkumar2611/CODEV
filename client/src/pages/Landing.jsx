@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const handleGetStarted = () => {
     if (user) {
@@ -43,12 +43,52 @@ export default function Landing() {
           className="flex items-center gap-6"
         >
           {user ? (
-            <button 
-              onClick={() => navigate("/dashboard")}
-              className="text-sm font-semibold text-zinc-300 hover:text-white transition-colors bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 px-5 py-2 rounded-xl"
-            >
-              Dashboard
-            </button>
+            <div className="relative group z-50">
+              <button className="flex items-center gap-2 focus:outline-none cursor-pointer">
+                <div className="relative rounded-full ring-2 ring-zinc-800 group-hover:ring-orange-500 transition-all shadow-lg">
+                  <img 
+                    src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
+                    alt={user?.username}
+                    className="w-10 h-10 rounded-full bg-[#1c1c1e] object-cover border border-zinc-850"
+                  />
+                  <div className="absolute -bottom-0.5 -right-0.5 bg-zinc-950 rounded-full flex items-center justify-center p-[1px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" strokeWidth="0">
+                      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                      <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="3" />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+              
+              {/* Dropdown Menu */}
+              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 p-2.5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
+                  <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
+                  <p className="text-xs font-bold text-white truncate mt-0.5">{user?.username}</p>
+                </div>
+                
+                <button 
+                  onClick={() => navigate("/dashboard")}
+                  className="w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                  Dashboard
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    if (confirm("Are you sure you want to logout?")) {
+                      logout();
+                      navigate("/");
+                    }
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors mt-1 cursor-pointer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Logout
+                </button>
+              </div>
+            </div>
           ) : (
             <>
               <button 

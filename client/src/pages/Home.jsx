@@ -85,28 +85,45 @@ export default function Home() {
       <div className="absolute top-[-10%] left-[-10%] w-[30%] h-[30%] bg-orange-600/5 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-zinc-800/20 blur-[120px] rounded-full pointer-events-none"></div>
 
-      <div className="absolute top-6 right-6 flex flex-col items-end">
-        <button 
-          onClick={() => {
-            if (confirm("Are you sure you want to logout?")) {
-              logout();
-            }
-          }}
-          className="relative group rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-550/20"
-          title={`Logout (${user?.username})`}
-        >
-          <img 
-            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
-            alt={user?.username}
-            className="w-12 h-12 rounded-full bg-[#1c1c1e] object-cover border border-zinc-800"
-          />
-          <div className="absolute -bottom-0.5 -right-0.5 bg-zinc-950 rounded-full flex items-center justify-center p-[2px]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-              <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="3" />
-            </svg>
+      <div className="absolute top-6 right-6 flex flex-col items-end z-50">
+        <div className="relative group">
+          <button 
+            className="relative rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-555/20 cursor-pointer"
+          >
+            <img 
+              src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
+              alt={user?.username}
+              className="w-12 h-12 rounded-full bg-[#1c1c1e] object-cover border border-zinc-800"
+            />
+            <div className="absolute -bottom-0.5 -right-0.5 bg-zinc-950 rounded-full flex items-center justify-center p-[2px]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="3" />
+              </svg>
+            </div>
+          </button>
+
+          {/* Hover Dropdown */}
+          <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 p-2.5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
+              <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
+              <p className="text-xs font-bold text-white truncate mt-0.5">{user?.username}</p>
+            </div>
+            
+            <button 
+              onClick={() => {
+                if (confirm("Are you sure you want to logout?")) {
+                  logout();
+                  navigate("/");
+                }
+              }}
+              className="w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Logout
+            </button>
           </div>
-        </button>
+        </div>
       </div>
 
       <div className="text-center mb-10 relative z-10">
