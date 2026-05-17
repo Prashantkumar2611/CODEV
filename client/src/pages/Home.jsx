@@ -4,12 +4,16 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { AnimatePresence, motion } from "framer-motion";
+import { LogOut, Home as HomeIcon, Settings, User, X } from "lucide-react";
+import { GooeyFilter } from "../components/ui/gooey-filter";
 
 export default function Home() {
   const [roomId, setRoomId] = useState("");
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isGooeyOpen, setIsGooeyOpen] = useState(false);
   
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
@@ -114,54 +118,126 @@ export default function Home() {
           )}
         </button>
 
-        <div className="relative group">
-          {showDropdown && (
-            <div 
-              className="fixed inset-0 z-40 bg-transparent cursor-default" 
-              onClick={() => setShowDropdown(false)}
-            />
-          )}
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="relative z-50 rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-555/20 cursor-pointer"
+        {/* Dynamic Gooey Hover Menu */}
+        <div 
+          className="relative z-50 flex flex-col items-center"
+          onMouseEnter={() => setIsGooeyOpen(true)}
+          onMouseLeave={() => setIsGooeyOpen(false)}
+        >
+          <GooeyFilter id="gooey-profile-menu" strength={5} />
+          
+          <div 
+            className="relative flex flex-col items-center"
+            style={{ filter: "url(#gooey-profile-menu)" }}
           >
-            <img 
-              src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
-              alt={user?.username}
-              className="w-12 h-12 rounded-full bg-[#1c1c1e] object-cover border border-zinc-800"
-            />
-            <div className="absolute -bottom-0.5 -right-0.5 bg-zinc-950 rounded-full flex items-center justify-center p-[2px]">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-                <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="3" />
-              </svg>
-            </div>
-          </button>
-
-          {/* Hover Dropdown */}
-          <div className={`absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 p-2.5 shadow-2xl transition-all duration-200 z-50 ${
-            showDropdown 
-              ? "opacity-100 visible" 
-              : "opacity-0 invisible group-hover:opacity-100 group-hover:visible"
-          }`}>
-            <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
-              <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
-              <p className="text-xs font-bold text-white truncate mt-0.5">{getCleanName(user?.username)}</p>
-            </div>
-            
-            <button 
-              onClick={() => {
-                setShowDropdown(false);
-                if (confirm("Are you sure you want to logout?")) {
-                  logout();
-                  navigate("/");
+            {/* Gooey Sub-options (vertical drop) */}
+            <AnimatePresence>
+              {isGooeyOpen && [
+                { 
+                  icon: User, 
+                  label: "Profile", 
+                  color: "bg-zinc-900 border border-zinc-800 text-zinc-100 hover:bg-zinc-850 hover:border-zinc-700",
+                  tooltip: `Signed in as: ${getCleanName(user?.username)}`,
+                  action: () => alert(`Signed in as: ${getCleanName(user?.username)}`)
+                },
+                { 
+                  icon: Settings, 
+                  label: "Theme", 
+                  color: "bg-zinc-900 border border-zinc-800 text-orange-400 hover:bg-orange-550/10 hover:border-orange-500/30",
+                  tooltip: `Switch to ${theme === 'light' ? 'Night' : 'Day'} Mode`,
+                  action: toggleTheme
+                },
+                { 
+                  icon: LogOut, 
+                  label: "Logout", 
+                  color: "bg-red-950/20 border border-red-900/30 text-red-400 hover:bg-red-900 hover:text-white",
+                  tooltip: "Logout Account",
+                  action: () => {
+                    if (confirm("Are you sure you want to logout?")) {
+                      logout();
+                      navigate("/");
+                    }
+                  }
                 }
-              }}
-              className="w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors cursor-pointer"
+              ].map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <motion.button
+                    key={item.label}
+                    onClick={item.action}
+                    title={item.tooltip}
+                    className={`absolute w-11 h-11 rounded-full flex items-center justify-center cursor-pointer shadow-lg z-40 transition-colors ${item.color}`}
+                    initial={{ y: 0, opacity: 0 }}
+                    animate={{
+                      y: (index + 1) * 48,
+                      opacity: 1,
+                    }}
+                    exit={{
+                      y: 0,
+                      opacity: 0,
+                      transition: {
+                        delay: (3 - index) * 0.05,
+                        duration: 0.35,
+                        type: "spring",
+                        bounce: 0,
+                      },
+                    }}
+                    transition={{
+                      delay: index * 0.05,
+                      duration: 0.35,
+                      type: "spring",
+                      bounce: 0,
+                    }}
+                  >
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={item.label}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </motion.div>
+                    </AnimatePresence>
+                  </motion.button>
+                );
+              })}
+            </AnimatePresence>
+
+            {/* Main Premium Hamburger Toggle Button */}
+            <motion.button
+              className="relative w-11 h-11 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center cursor-pointer z-50 shadow-lg shadow-orange-500/20 border border-orange-400/30"
+              onClick={() => setIsGooeyOpen(!isGooeyOpen)}
+              title="Menu Options"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-              Logout
-            </button>
+              <AnimatePresence mode="wait">
+                {isGooeyOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ opacity: 0, rotate: 90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: -90 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col gap-0.5 items-center justify-center"
+                  >
+                    <div className="w-4 h-0.5 bg-white rounded-full" />
+                    <div className="w-4 h-0.5 bg-white rounded-full" />
+                    <div className="w-4 h-0.5 bg-white rounded-full" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
