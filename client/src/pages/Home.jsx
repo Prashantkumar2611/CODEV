@@ -9,6 +9,7 @@ export default function Home() {
   const [roomId, setRoomId] = useState("");
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
   
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
@@ -101,8 +102,15 @@ export default function Home() {
         </button>
 
         <div className="relative group">
+          {showDropdown && (
+            <div 
+              className="fixed inset-0 z-40 bg-transparent cursor-default" 
+              onClick={() => setShowDropdown(false)}
+            />
+          )}
           <button 
-            className="relative rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-555/20 cursor-pointer"
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="relative z-50 rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-555/20 cursor-pointer"
           >
             <img 
               src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`} 
@@ -118,7 +126,11 @@ export default function Home() {
           </button>
 
           {/* Hover Dropdown */}
-          <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 p-2.5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          <div className={`absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 p-2.5 shadow-2xl transition-all duration-200 z-50 ${
+            showDropdown 
+              ? "opacity-100 visible" 
+              : "opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+          }`}>
             <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
               <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
               <p className="text-xs font-bold text-white truncate mt-0.5">{user?.username}</p>
@@ -126,6 +138,7 @@ export default function Home() {
             
             <button 
               onClick={() => {
+                setShowDropdown(false);
                 if (confirm("Are you sure you want to logout?")) {
                   logout();
                   navigate("/");
