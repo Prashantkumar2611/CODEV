@@ -61,10 +61,10 @@ router.get('/my-projects', verifyToken, async (req, res) => {
 // Get a single project by ID
 router.get('/:id', verifyToken, async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id).populate('owner', 'username');
     if (!project) return res.status(404).json({ error: 'Project not found' });
     
-    const isOwner = project.owner.toString() === req.user.id;
+    const isOwner = project.owner._id.toString() === req.user.id;
     res.json({
       ...project.toObject(),
       isOwner

@@ -1,31 +1,74 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile, onDeleteFile, isProject, projectName = "Project Phoenix" }) {
+export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile, onDeleteFile, isProject, projectName = "Project Phoenix", projectOwner = "" }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
 
-  // Combine real-time socket users and simulated developers for an immersive visual experience
-  const realUsers = users.map(u => ({
-    name: u.username,
-    role: u.username.toLowerCase().includes("prashu") ? "Project Owner" : "Project Collaborator",
-    color: u.color || "#f97316",
-    status: u.typing ? "Typing..." : "Active Now",
-    isReal: true,
-    id: u.id
-  }));
+  const getCleanName = (emailOrUsername) => {
+    if (!emailOrUsername) return "";
+    if (emailOrUsername.includes("@")) {
+      const parts = emailOrUsername.split("@")[0];
+      return parts
+        .split(/[\._\-]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .filter(Boolean)
+        .join(" ");
+    }
+    return emailOrUsername.charAt(0).toUpperCase() + emailOrUsername.slice(1);
+  };
 
-  const simulatedUsers = [
-    { name: "Alex", role: "Backend Architect", color: "#3b82f6", status: "Coding main.js", isReal: false, id: "sim-alex" },
-    { name: "Sarah", role: "UI Designer", color: "#a855f7", status: "Reviewing utils.ts", isReal: false, id: "sim-sarah" },
-    { name: "Marcus", role: "Fullstack Eng.", color: "#22c55e", status: "Writing styles.css", isReal: false, id: "sim-marcus" }
-  ];
+  // Get clean names
+  const cleanOwnerName = projectOwner ? getCleanName(projectOwner) : "";
 
-  const combinedBuilders = [
-    ...realUsers,
-    ...simulatedUsers.filter(s => !realUsers.some(r => r.name.toLowerCase() === s.name.toLowerCase()))
-  ];
+  // Map real connected socket users
+  const activeSocketUsers = users.map(u => {
+    const isThisUserOwner = cleanOwnerName && u.username.toLowerCase() === cleanOwnerName.toLowerCase();
+    return {
+      name: u.username,
+      role: isThisUserOwner ? "Project Owner" : "Collaborator",
+      color: u.color || "#f97316",
+      status: u.typing ? "Typing..." : "Active Now",
+      isOnline: true,
+      id: u.id
+    };
+  });
+
+  // Check if owner is online
+  const isOwnerOnline = cleanOwnerName && activeSocketUsers.some(u => u.name.toLowerCase() === cleanOwnerName.toLowerCase());
+
+  const buildersList = [];
+
+  // 1. Add Owner first
+  if (cleanOwnerName) {
+    if (isOwnerOnline) {
+      // Find owner in active list
+      const onlineOwner = activeSocketUsers.find(u => u.name.toLowerCase() === cleanOwnerName.toLowerCase());
+      if (onlineOwner) buildersList.push(onlineOwner);
+    } else {
+      // Add offline owner card
+      buildersList.push({
+        name: cleanOwnerName,
+        role: "Project Owner",
+        color: "#52525b",
+        status: "Offline",
+        isOnline: false,
+        id: "offline-owner"
+      });
+    }
+  }
+
+  // 2. Add other collaborators
+  activeSocketUsers.forEach(u => {
+    if (cleanOwnerName && u.name.toLowerCase() === cleanOwnerName.toLowerCase()) return; // Already added as owner
+    buildersList.push(u);
+  });
+
+  // 3. Fallback for Quick Rooms or if no owner loaded yet
+  if (buildersList.length === 0) {
+    activeSocketUsers.forEach(u => buildersList.push(u));
+  }
 
   const copyLink = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -161,7 +204,7 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
         <div className="mb-5 border-t border-zinc-850 pt-4">
           <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-3 px-1">Project Builders</p>
           <div className="space-y-2 overflow-y-auto max-h-[180px] custom-scrollbar">
-            {combinedBuilders.map(m => (
+            {buildersList.map(m => (
               <div key={m.id || m.name} className="bg-zinc-950/80 border border-zinc-850/50 p-2.5 rounded-xl flex items-center justify-between hover:border-zinc-800 transition-colors">
                 <div className="flex items-center gap-2">
                   <div 
@@ -173,15 +216,23 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
                   <div className="flex flex-col">
                     <div className="flex items-center gap-1.5">
                       <span className="text-[11px] font-bold text-zinc-100">{m.name}</span>
-                      {m.isReal && (
+                      {m.isOnline ? (
                         <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" title="Connected Live" />
+                      ) : (
+                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-600" title="Offline" />
                       )}
                     </div>
                     <span className="text-[9px] text-zinc-500 font-medium">{m.role}</span>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[8px] text-orange-400 font-bold px-1.5 py-0.2 rounded-full bg-orange-500/10 border border-orange-500/20">{m.status}</span>
+                  <span className={`text-[8px] font-bold px-1.5 py-0.2 rounded-full border ${
+                    m.isOnline 
+                      ? 'text-orange-400 bg-orange-500/10 border-orange-500/20' 
+                      : 'text-zinc-500 bg-zinc-850/50 border-zinc-800'
+                  }`}>
+                    {m.status}
+                  </span>
                 </div>
               </div>
             ))}

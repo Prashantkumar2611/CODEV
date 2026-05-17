@@ -42,6 +42,7 @@ export default function Room() {
   const [running, setRunning] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
   const [projectName, setProjectName] = useState("Project Phoenix");
+  const [projectOwner, setProjectOwner] = useState("");
   const isRemoteUpdate = useRef(false);
   const activeFileRef = useRef(activeFile);
   
@@ -60,8 +61,11 @@ export default function Room() {
             `${import.meta.env.VITE_SERVER_URL || ''}/api/projects/${roomId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
-          if (res.data && res.data.name) {
-            setProjectName(res.data.name);
+          if (res.data) {
+            if (res.data.name) setProjectName(res.data.name);
+            if (res.data.owner && res.data.owner.username) {
+              setProjectOwner(res.data.owner.username);
+            }
           }
         } catch (err) {
           console.error("Error fetching project details:", err);
@@ -70,6 +74,7 @@ export default function Room() {
       fetchProjectDetails();
     } else {
       setProjectName("Quick Room");
+      setProjectOwner("");
     }
   }, [roomId, isProject]);
 
@@ -306,6 +311,7 @@ export default function Room() {
         onDeleteFile={handleDeleteFile}
         isProject={isProject}
         projectName={projectName}
+        projectOwner={projectOwner}
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
