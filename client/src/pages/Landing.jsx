@@ -10,6 +10,19 @@ export default function Landing() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const getCleanName = (emailOrUsername) => {
+    if (!emailOrUsername) return "Guest";
+    if (emailOrUsername.includes("@")) {
+      const parts = emailOrUsername.split("@")[0];
+      return parts
+        .split(/[\._\-]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .filter(Boolean)
+        .join(" ");
+    }
+    return emailOrUsername.charAt(0).toUpperCase() + emailOrUsername.slice(1);
+  };
+
   const handleGetStarted = () => {
     if (user) {
       navigate("/dashboard");
@@ -92,7 +105,7 @@ export default function Landing() {
               }`}>
                 <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
                   <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
-                  <p className="text-xs font-bold text-white truncate mt-0.5">{user?.username}</p>
+                  <p className="text-xs font-bold text-white truncate mt-0.5">{getCleanName(user?.username)}</p>
                 </div>
                 
                 <button 

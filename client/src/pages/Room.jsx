@@ -21,7 +21,19 @@ export default function Room() {
   const { roomId } = useParams();
   const { user } = useContext(AuthContext);
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const username = user?.username || "Anonymous";
+  const getCleanName = (emailOrUsername) => {
+    if (!emailOrUsername) return "Anonymous";
+    if (emailOrUsername.includes("@")) {
+      const parts = emailOrUsername.split("@")[0];
+      return parts
+        .split(/[\._\-]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .filter(Boolean)
+        .join(" ");
+    }
+    return emailOrUsername.charAt(0).toUpperCase() + emailOrUsername.slice(1);
+  };
+  const username = getCleanName(user?.username);
 
   const [files, setFiles] = useState({});
   const [activeFile, setActiveFile] = useState("");

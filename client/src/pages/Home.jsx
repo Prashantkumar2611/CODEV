@@ -15,6 +15,19 @@ export default function Home() {
   const { user, logout } = useContext(AuthContext);
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  const getCleanName = (emailOrUsername) => {
+    if (!emailOrUsername) return "Guest";
+    if (emailOrUsername.includes("@")) {
+      const parts = emailOrUsername.split("@")[0];
+      return parts
+        .split(/[\._\-]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .filter(Boolean)
+        .join(" ");
+    }
+    return emailOrUsername.charAt(0).toUpperCase() + emailOrUsername.slice(1);
+  };
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -133,7 +146,7 @@ export default function Home() {
           }`}>
             <div className="px-2 py-1.5 border-b border-zinc-850 mb-2">
               <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider">Signed in as</p>
-              <p className="text-xs font-bold text-white truncate mt-0.5">{user?.username}</p>
+              <p className="text-xs font-bold text-white truncate mt-0.5">{getCleanName(user?.username)}</p>
             </div>
             
             <button 
@@ -160,7 +173,7 @@ export default function Home() {
             <h1 className="brand-logo-text text-white text-4xl font-bold tracking-tight">CODEV</h1>
           </div>
         </Link>
-        <p className="text-zinc-400 text-sm">Welcome back, <span className="text-orange-400 font-bold">{user?.username}</span></p>
+        <p className="text-zinc-400 text-sm">Welcome back, <span className="text-orange-400 font-bold">{getCleanName(user?.username)}</span></p>
       </div>
 
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
