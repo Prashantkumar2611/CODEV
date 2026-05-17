@@ -219,7 +219,7 @@ export default function Room() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-zinc-950 text-zinc-100 font-sans">
       <Sidebar 
         users={users} 
         roomId={roomId} 
@@ -231,15 +231,15 @@ export default function Room() {
         isProject={isProject}
       />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <div className="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
+        <div className="flex items-center justify-between p-3.5 bg-zinc-900 border-b border-zinc-800">
           <div className="flex items-center gap-4">
             {isProject && (
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 font-medium">{activeFile}</span>
+                <span className="text-zinc-300 font-semibold text-sm">{activeFile}</span>
                 {isReadOnly && (
-                  <span className="bg-red-900/50 text-red-400 text-[10px] px-2 py-0.5 rounded border border-red-800 flex items-center gap-1" title={`Owned by ${activeFileData.creator}`}>
+                  <span className="bg-red-950/20 text-red-400 text-[10px] px-2 py-0.5 rounded border border-red-900/30 flex items-center gap-1" title={`Owned by ${activeFileData.creator}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     Read-Only
                   </span>
@@ -250,7 +250,7 @@ export default function Room() {
               value={activeFileData.language}
               onChange={handleLanguageChange}
               disabled={isReadOnly}
-              className="bg-gray-700 text-xs px-2 py-1 rounded text-gray-300 uppercase outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-zinc-950 text-zinc-300 text-xs px-3 py-1.5 rounded-lg border border-zinc-800 uppercase outline-none focus:border-orange-500/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <option value="javascript">JavaScript (Node)</option>
               <option value="python">Python</option>
@@ -264,15 +264,15 @@ export default function Room() {
           <button
             onClick={runCode}
             disabled={running}
-            className="bg-green-600 hover:bg-green-500 px-6 py-2 rounded font-bold shadow-lg shadow-green-600/20"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-1.5 rounded-lg font-bold shadow-lg shadow-orange-500/10 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer text-sm"
           >
             {running ? "Running..." : "▶ Run"}
           </button>
         </div>
 
         {/* Editor + Output */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 relative">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 relative overflow-hidden bg-zinc-950">
             {activeFile ? (
               <Editor
                 code={activeFileData.code}
@@ -285,8 +285,8 @@ export default function Room() {
                 isReadOnly={isReadOnly}
               />
             ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">
-                Select a file to start coding
+              <div className="flex items-center justify-center h-full text-zinc-600 font-mono text-sm">
+                // Select a file to start coding
               </div>
             )}
           </div>

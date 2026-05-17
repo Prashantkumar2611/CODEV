@@ -88,7 +88,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center overflow-hidden p-4 bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center overflow-hidden p-4 bg-zinc-950">
       <div className="w-full relative max-w-5xl overflow-hidden flex flex-col md:flex-row shadow-2xl rounded-3xl border border-zinc-800">
         <div className="w-full h-full z-2 absolute bg-gradient-to-t from-transparent to-black pointer-events-none"></div>
         <div className="flex absolute z-2 overflow-hidden backdrop-blur-2xl pointer-events-none">
