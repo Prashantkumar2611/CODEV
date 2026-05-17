@@ -40,7 +40,7 @@ export default function Room() {
   const [output, setOutput] = useState("");
   const [users, setUsers] = useState([]);
   const [running, setRunning] = useState(false);
-  const [isGridView, setIsGridView] = useState(true);
+  const [isGridView, setIsGridView] = useState(false);
   const [projectName, setProjectName] = useState("Project Phoenix");
   const [projectOwner, setProjectOwner] = useState("");
   const isRemoteUpdate = useRef(false);
