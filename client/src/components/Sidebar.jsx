@@ -103,7 +103,7 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
     }
   };
 
-  const [activeTab, setActiveTab] = useState("Explorer");
+  const [activeTab, setActiveTab] = useState("Files");
 
   return (
     <div className="w-64 bg-zinc-900 border-r border-zinc-800/80 p-5 flex flex-col font-sans text-zinc-200">
@@ -155,7 +155,7 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
       {/* Tabs list matching the design */}
       <div className="space-y-0.5 mb-5">
         {[
-          { name: "Explorer", icon: <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21" /></svg> },
+          { name: "Files", icon: <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> },
           { name: "Members", icon: <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
           { name: "Source Control", icon: <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7" /><line x1="6" y1="9" x2="6" y2="21" /></svg> },
           { name: "Extensions", icon: <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg> },
@@ -172,8 +172,8 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
         ))}
       </div>
 
-      {/* Explorer files list shown conditionally */}
-      {activeTab === "Explorer" && isProject && (
+      {/* Files list shown conditionally */}
+      {activeTab === "Files" && isProject && (
         <div className="mb-5 border-t border-zinc-850 pt-4">
           <div className="flex justify-between items-center mb-2 px-1">
             <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Workspace Files</p>
