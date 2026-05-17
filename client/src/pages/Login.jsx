@@ -133,9 +133,21 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg mb-6 text-sm">
-              {error}
-            </div>
+            error === "Logging in with Google..." ? (
+              <div className="bg-orange-500/5 border border-orange-500/30 text-orange-400 p-4 rounded-xl mb-6 text-sm flex flex-col gap-1.5 relative overflow-hidden backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="font-semibold tracking-wide">Logging in with Google...</span>
+                </div>
+                <p className="text-zinc-500 text-xs leading-relaxed">
+                  Note: The server is waking up from sleep mode (Render Free Tier cold start). This takes 20-30 seconds on the first login of the day, but subsequent requests will be instant!
+                </p>
+              </div>
+            ) : (
+              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg mb-6 text-sm">
+                {error}
+              </div>
+            )
           )}
 
           <form
