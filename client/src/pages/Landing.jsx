@@ -36,7 +36,7 @@ export default function Landing() {
           onClick={() => navigate("/")}
         >
           <img src="/favicon.svg" alt="CollabCode Logo" className="w-10 h-10 object-contain" />
-          <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">CollabCode</span>
+          <span className="brand-logo-text text-xl font-bold tracking-tight bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">CODEV</span>
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -46,7 +46,7 @@ export default function Landing() {
         >
           <button 
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center"
+            className="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center"
             title={theme === 'light' ? 'Switch to Night Mode' : 'Switch to Day Mode'}
           >
             {theme === 'light' ? (
@@ -262,7 +262,7 @@ export default function Landing() {
               </div>
             </div>
             <p className="text-zinc-400 text-[14px] leading-relaxed italic">
-              "We use CollabCode internally to prototype new types of Assistants before pushing them to production. It allows us to rapidly deploy."
+              "We use CODEV internally to prototype new types of Assistants before pushing them to production. It allows us to rapidly deploy."
             </p>
           </div>
           <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 p-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
@@ -274,7 +274,7 @@ export default function Landing() {
               </div>
             </div>
             <p className="text-zinc-400 text-[14px] leading-relaxed italic">
-              "We needed to be able to collaborate on the codebase, which CollabCode allowed us to do instantly without setup."
+              "We needed to be able to collaborate on the codebase, which CODEV allowed us to do instantly without setup."
             </p>
           </div>
           <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 p-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
@@ -286,7 +286,7 @@ export default function Landing() {
               </div>
             </div>
             <p className="text-zinc-400 text-[14px] leading-relaxed italic">
-              "CollabCode extrapolates complex problems and takes care of all the mundane parts of coding. It's magic."
+              "CODEV extrapolates complex problems and takes care of all the mundane parts of coding. It's magic."
             </p>
           </div>
         </div>
@@ -328,7 +328,7 @@ export default function Landing() {
       </section>
       
       <footer className="border-t border-zinc-900 py-8 text-center text-zinc-600 text-xs bg-zinc-950">
-        <p>CollabCode &copy; {new Date().getFullYear()}. Crafted for developers.</p>
+        <p>CODEV &copy; {new Date().getFullYear()}. Crafted for developers.</p>
       </footer>
     </div>
   );

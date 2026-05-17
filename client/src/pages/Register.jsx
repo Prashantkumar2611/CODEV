@@ -73,13 +73,13 @@ export default function Register() {
         <div className="bg-black text-white p-8 md:p-12 md:w-1/2 flex flex-col justify-between relative overflow-hidden min-h-[300px] md:min-h-[500px]">
           <div className="z-10 flex items-center gap-2">
             <img src="/favicon.svg" alt="Logo" className="w-8 h-8" />
-            <span className="font-bold text-lg tracking-wider bg-gradient-to-r from-orange-400 to-amber-200 bg-clip-text text-transparent">CollabCode</span>
+            <span className="brand-logo-text font-bold text-lg tracking-wider bg-gradient-to-r from-orange-400 to-amber-200 bg-clip-text text-transparent">CODEV</span>
           </div>
           <h1 className="text-2xl md:text-4xl font-medium leading-tight z-10 tracking-tight relative mt-12 md:mt-0">
             Real-time collaborative editing for modern developers.
           </h1>
           <div className="z-10 text-xs text-zinc-500 mt-8 md:mt-0">
-            © {new Date().getFullYear()} CollabCode. All rights reserved.
+            © {new Date().getFullYear()} CODEV. All rights reserved.
           </div>
         </div>
 

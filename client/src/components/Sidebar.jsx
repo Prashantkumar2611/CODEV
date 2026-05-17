@@ -13,8 +13,8 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
 
   const shareLink = async () => {
     const shareData = {
-      title: 'Join my CollabCode Room',
-      text: `Join my live coding room on CollabCode! Room ID: ${roomId}`,
+      title: 'Join my CODEV Room',
+      text: `Join my live coding room on CODEV! Room ID: ${roomId}`,
       url: inviteLink,
     };
     if (navigator.share) {
@@ -31,8 +31,8 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
   return (
     <div className="w-64 bg-zinc-900 border-r border-zinc-800/80 p-5 flex flex-col font-sans text-zinc-200">
       <div className="flex items-center gap-2 mb-6 cursor-pointer" onClick={() => navigate("/")}>
-        <img src="/favicon.svg" alt="CollabCode Logo" className="w-6 h-6 object-contain" />
-        <span className="font-bold text-md tracking-tight bg-gradient-to-r from-orange-400 to-amber-250 bg-clip-text text-transparent">CollabCode</span>
+        <img src="/favicon.svg" alt="CODEV Logo" className="w-6 h-6 object-contain" />
+        <span className="brand-logo-text font-bold text-md tracking-tight bg-gradient-to-r from-orange-400 to-amber-250 bg-clip-text text-transparent">CODEV</span>
       </div>
 
       <button 

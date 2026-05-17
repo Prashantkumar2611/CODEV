@@ -116,3 +116,29 @@ html.light .bg-zinc-950.border-t {
   border-color: #e4e4e7 !important;
 }
 
+/* Logo Text Contrast Adjust */
+html.light .brand-logo-text {
+  background: linear-gradient(to right, #18181b, #f97316) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Testimonial Cards Adjust in Light Mode */
+html.light .bg-zinc-900\/60 {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 10px 30px rgba(9, 9, 11, 0.04) !important;
+}
+
+/* Features strip and Footer Adjust in Light Mode */
+html.light .bg-zinc-950\/80,
+html.light .bg-zinc-950,
+html.light footer {
+  background-color: #fafafa !important;
+  border-top-color: #e4e4e7 !important;
+}
+
+html.light .border-zinc-900 {
+  border-color: #e4e4e7 !important;
+}
+

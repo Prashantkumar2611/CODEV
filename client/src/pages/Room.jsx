@@ -266,7 +266,7 @@ export default function Room() {
           <div className="flex items-center gap-3">
             <button 
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-350 hover:text-white transition-all cursor-pointer flex items-center justify-center"
+              className="p-2 rounded-lg bg-zinc-950 hover:bg-zinc-900 text-zinc-355 hover:text-white transition-all cursor-pointer flex items-center justify-center"
               title={theme === 'light' ? 'Switch to Night Mode' : 'Switch to Day Mode'}
             >
               {theme === 'light' ? (

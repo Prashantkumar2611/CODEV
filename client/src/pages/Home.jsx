@@ -90,7 +90,7 @@ export default function Home() {
       <div className="absolute top-6 right-6 flex items-center gap-4 z-50">
         <button 
           onClick={toggleTheme}
-          className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center shadow-lg"
+          className="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center shadow-lg"
           title={theme === 'light' ? 'Switch to Night Mode' : 'Switch to Day Mode'}
         >
           {theme === 'light' ? (
@@ -144,7 +144,7 @@ export default function Home() {
         <Link to="/" className="inline-block hover:opacity-80 transition-opacity">
           <div className="flex items-center justify-center gap-3 mb-2">
             <img src="/favicon.svg" alt="Logo" className="w-10 h-10" />
-            <h1 className="text-white text-4xl font-bold tracking-tight">CollabCode</h1>
+            <h1 className="brand-logo-text text-white text-4xl font-bold tracking-tight">CODEV</h1>
           </div>
         </Link>
         <p className="text-zinc-400 text-sm">Welcome back, <span className="text-orange-400 font-bold">{user?.username}</span></p>
