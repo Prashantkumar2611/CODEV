@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { AnimatePresence, motion } from 'framer-motion';
+import { User, LogOut, Home as HomeIcon, Settings, X } from 'lucide-react';
+import { GooeyFilter } from './ui/gooey-filter';
 
 export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile, onDeleteFile, isProject, projectName = "Project Phoenix", projectOwner = "" }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const [isGooeyOpen, setIsGooeyOpen] = useState(false);
 
   const getCleanName = (emailOrUsername) => {
     if (!emailOrUsername) return "";
@@ -282,23 +288,126 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
         ))}
       </div>
 
-      {/* Bottom Mock Sidebar Controls */}
-      <div className="border-t border-zinc-850 pt-3 flex flex-col gap-0.5">
-        <button className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850/30 cursor-pointer transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850/30 cursor-pointer transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Account
-        </button>
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="w-full mt-2 bg-red-950/20 border border-red-900/30 hover:bg-red-950/40 hover:text-red-400 text-red-400 font-semibold py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-xs"
+      {/* Dynamic Gooey Hover Hamburger Menu */}
+      <div 
+        className="border-t border-zinc-850 pt-4 mt-2 flex flex-col items-center justify-center relative w-full"
+        onMouseEnter={() => setIsGooeyOpen(true)}
+        onMouseLeave={() => setIsGooeyOpen(false)}
+      >
+        <GooeyFilter id="gooey-sidebar-menu" strength={5} />
+        
+        <div 
+          className="relative flex flex-col items-center justify-center w-full min-h-[50px]"
+          style={{ filter: "url(#gooey-sidebar-menu)" }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Leave Room
-        </button>
+          {/* Sub-options popping UPWARDS (y is negative) */}
+          <AnimatePresence>
+            {isGooeyOpen && [
+              { 
+                icon: User, 
+                label: "Account", 
+                color: "bg-zinc-950 border border-zinc-800 text-zinc-100 hover:bg-zinc-850 hover:border-zinc-700",
+                tooltip: `Signed in as: ${getCleanName(user?.username)}`,
+                action: () => alert(`Signed in as: ${getCleanName(user?.username)}`)
+              },
+              { 
+                icon: Settings, 
+                label: "Settings", 
+                color: "bg-zinc-950 border border-zinc-800 text-orange-400 hover:bg-orange-550/10 hover:border-orange-500/30",
+                tooltip: "Workspace Settings",
+                action: () => alert("Workspace configurations loaded.")
+              },
+              { 
+                icon: LogOut, 
+                label: "Leave Room", 
+                color: "bg-red-950/20 border border-red-900/30 text-red-400 hover:bg-red-900 hover:text-white",
+                tooltip: "Leave Coding Room",
+                action: () => {
+                  if (confirm("Are you sure you want to leave this coding room?")) {
+                    navigate('/dashboard');
+                  }
+                }
+              }
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.button
+                  key={item.label}
+                  onClick={item.action}
+                  title={item.tooltip}
+                  className={`absolute w-10 h-10 rounded-full flex items-center justify-center cursor-pointer shadow-lg z-40 transition-colors ${item.color}`}
+                  initial={{ y: 0, opacity: 0 }}
+                  animate={{
+                    y: -(index + 1) * 44, // Popping UPWARDS!
+                    opacity: 1,
+                  }}
+                  exit={{
+                    y: 0,
+                    opacity: 0,
+                    transition: {
+                      delay: (3 - index) * 0.05,
+                      duration: 0.35,
+                      type: "spring",
+                      bounce: 0,
+                    },
+                  }}
+                  transition={{
+                    delay: index * 0.05,
+                    duration: 0.35,
+                    type: "spring",
+                    bounce: 0,
+                  }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={item.label}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.button>
+              );
+            })}
+          </AnimatePresence>
+
+          {/* Main Premium Hamburger Toggle Button */}
+          <motion.button
+            className="relative w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center cursor-pointer z-50 shadow-lg shadow-orange-500/20 border border-orange-400/30"
+            onClick={() => setIsGooeyOpen(!isGooeyOpen)}
+            title="Room Controls"
+          >
+            <AnimatePresence mode="wait">
+              {isGooeyOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ opacity: 0, rotate: -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 90 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X className="w-4 h-4 text-white" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ opacity: 0, rotate: 90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: -90 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-0.5 items-center justify-center"
+                >
+                  <div className="w-4 h-0.5 bg-white rounded-full" />
+                  <div className="w-4 h-0.5 bg-white rounded-full" />
+                  <div className="w-4 h-0.5 bg-white rounded-full" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
       </div>
     </div>
   );
