@@ -49,4 +49,33 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Google Login / Registration
+router.post('/google-login', async (req, res) => {
+  try {
+    const { email, name, googleId } = req.body;
+    if (!email) return res.status(400).json({ error: "Email is required" });
+
+    // Find if user already exists
+    let user = await User.findOne({ username: email });
+    if (!user) {
+      // Create new user since it's their first time logging in
+      const salt = await bcrypt.genSalt(10);
+      const randomPassword = Math.random().toString(36).slice(-10);
+      const hashedPassword = await bcrypt.hash(randomPassword, salt);
+      user = new User({ username: email, password: hashedPassword });
+      await user.save();
+    }
+
+    const token = jwt.sign(
+      { id: user._id, username: user.username }, 
+      process.env.JWT_SECRET || "fallback_secret", 
+      { expiresIn: '7d' }
+    );
+    
+    res.json({ token, username: user.username });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

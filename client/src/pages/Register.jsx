@@ -161,6 +161,50 @@ export default function Register() {
               Create a new account
             </button>
 
+            <div className="relative flex py-2 items-center">
+              <div className="flex-grow border-t border-zinc-800"></div>
+              <span className="flex-shrink mx-4 text-zinc-500 text-xs uppercase tracking-wider">Or continue with</span>
+              <div className="flex-grow border-t border-zinc-800"></div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                // Trigger Google OAuth flow
+                const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+                if (!clientId) {
+                  alert("Google Client ID is not configured in environment variables (.env)");
+                  return;
+                }
+                const redirectUri = `${window.location.origin}/login`;
+                const scope = "openid email profile";
+                const responseType = "token";
+                const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
+                window.location.href = authUrl;
+              }}
+              className="w-full flex items-center justify-center gap-3 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 text-zinc-300 hover:text-white font-medium py-3 px-4 rounded-lg transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#EA4335"
+                  d="M5.2662,9.7645 C6.1987,6.9381 8.8523,4.909 12,4.909 C13.6909,4.909 15.2181,5.509 16.4181,6.4909 L19.909,3 C17.7818,1.1454 15.0545,0 12,0 C7.3303,0 3.3218,2.6974 1.3963,6.6268 L5.2662,9.7645 Z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M16.0407,18.0133 C14.9503,18.7178 13.5602,19.0909 12,19.0909 C8.8523,19.0909 6.1987,17.0618 5.2662,14.2354 L1.3963,17.3731 C3.3218,21.3026 7.3303,24 12,24 C14.9727,24 17.7272,22.92 19.7727,21.0763 L16.0407,18.0133 Z"
+                />
+                <path
+                  fill="#4285F4"
+                  d="M23.49,12.2727 C23.49,11.4545 23.4181,10.7345 23.2909,10.0363 L12,10.0363 L12,14.629 L18.4727,14.629 C18.1909,16.069 17.3272,17.2727 16.0407,18.0133 L19.7727,21.0763 C21.9545,19.069 23.49,16.0254 23.49,12.2727 Z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.2662,9.7645 C5.0217,10.5049 4.8872,11.2977 4.8872,12.1227 C4.8872,12.9477 5.0217,13.7404 5.2662,14.4809 L1.3963,17.3731 C0.5054,15.5684 0,13.5627 0,11.4372 C0,9.3117 0.5054,7.306 1.3963,5.5013 L5.2662,9.7645 Z"
+                />
+              </svg>
+              Continue with Google
+            </button>
+
             <div className="text-center text-zinc-400 text-sm mt-4">
               Already have an account?{" "}
               <Link to="/login" className="text-orange-400 hover:text-orange-300 font-medium hover:underline">
