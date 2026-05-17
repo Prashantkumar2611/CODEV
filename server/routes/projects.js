@@ -58,6 +58,22 @@ router.get('/my-projects', verifyToken, async (req, res) => {
   }
 });
 
+// Get a single project by ID
+router.get('/:id', verifyToken, async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    
+    const isOwner = project.owner.toString() === req.user.id;
+    res.json({
+      ...project.toObject(),
+      isOwner
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Delete a project
 router.delete('/:id', verifyToken, async (req, res) => {
   try {

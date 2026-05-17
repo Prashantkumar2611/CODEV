@@ -41,6 +41,7 @@ export default function Room() {
   const [users, setUsers] = useState([]);
   const [running, setRunning] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
+  const [projectName, setProjectName] = useState("Project Phoenix");
   const isRemoteUpdate = useRef(false);
   const activeFileRef = useRef(activeFile);
   
@@ -49,6 +50,28 @@ export default function Room() {
   }, [activeFile]);
 
   const isProject = roomId && roomId.length === 24;
+
+  useEffect(() => {
+    if (isProject) {
+      const fetchProjectDetails = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const res = await axios.get(
+            `${import.meta.env.VITE_SERVER_URL || ''}/api/projects/${roomId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          if (res.data && res.data.name) {
+            setProjectName(res.data.name);
+          }
+        } catch (err) {
+          console.error("Error fetching project details:", err);
+        }
+      };
+      fetchProjectDetails();
+    } else {
+      setProjectName("Quick Room");
+    }
+  }, [roomId, isProject]);
 
   useEffect(() => {
     socket.connect();
@@ -282,6 +305,7 @@ export default function Room() {
         onAddFile={handleAddFile}
         onDeleteFile={handleDeleteFile}
         isProject={isProject}
+        projectName={projectName}
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -289,7 +313,7 @@ export default function Room() {
         <div className="flex items-center justify-between p-3.5 bg-zinc-900 border-b border-zinc-800">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-white font-bold text-sm">Project Phoenix</span>
+              <span className="text-white font-bold text-sm">{projectName}</span>
               <span className="bg-zinc-850/80 border border-zinc-800/80 text-[10px] font-bold text-orange-400 px-2 py-0.5 rounded-lg font-mono">
                 {activeFileData.language === 'javascript' ? 'JavaScript (Global)' : activeFileData.language}
               </span>

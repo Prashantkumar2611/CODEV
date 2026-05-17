@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile, onDeleteFile, isProject }) {
+export default function Sidebar({ users, roomId, files = {}, activeFile, onFileSelect, onAddFile, onDeleteFile, isProject, projectName = "Project Phoenix" }) {
   const [showInvite, setShowInvite] = useState(false);
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
@@ -72,8 +72,8 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
 
       {/* Current Room Info Section */}
       <div className="bg-zinc-950 border border-zinc-850/80 p-3 rounded-xl mb-5">
-        <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider mb-1">Current Room</p>
-        <h3 className="text-white text-xs font-bold truncate">Project Phoenix</h3>
+        <p className="text-[9px] text-zinc-550 font-bold uppercase tracking-wider mb-1">Current Room</p>
+        <h3 className="text-white text-xs font-bold truncate">{projectName}</h3>
         <p className="text-[10px] text-zinc-550 mt-0.5 truncate">ID: {roomId}</p>
       </div>
 
