@@ -70,6 +70,17 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
     activeSocketUsers.forEach(u => buildersList.push(u));
   }
 
+  // Deduplicate builders list to avoid ghost tab connections or duplicate listings
+  const uniqueBuilders = [];
+  const seenNames = new Set();
+  buildersList.forEach(b => {
+    const cleanLower = b.name.toLowerCase();
+    if (!seenNames.has(cleanLower)) {
+      seenNames.add(cleanLower);
+      uniqueBuilders.push(b);
+    }
+  });
+
   const copyLink = () => {
     navigator.clipboard.writeText(inviteLink);
     alert("Invite link copied!");
@@ -204,7 +215,7 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
         <div className="mb-5 border-t border-zinc-850 pt-4">
           <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-3 px-1">Project Builders</p>
           <div className="space-y-2 overflow-y-auto max-h-[180px] custom-scrollbar">
-            {buildersList.map(m => (
+            {uniqueBuilders.map(m => (
               <div key={m.id || m.name} className="bg-zinc-950/80 border border-zinc-850/50 p-2.5 rounded-xl flex items-center justify-between hover:border-zinc-800 transition-colors">
                 <div className="flex items-center gap-2">
                   <div 
