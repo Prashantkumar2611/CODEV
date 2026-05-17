@@ -6,6 +6,27 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
   const inviteLink = window.location.href; // Get current full URL
   const navigate = useNavigate();
 
+  // Combine real-time socket users and simulated developers for an immersive visual experience
+  const realUsers = users.map(u => ({
+    name: u.username,
+    role: u.username.toLowerCase().includes("prashu") ? "Project Owner" : "Project Collaborator",
+    color: u.color || "#f97316",
+    status: u.typing ? "Typing..." : "Active Now",
+    isReal: true,
+    id: u.id
+  }));
+
+  const simulatedUsers = [
+    { name: "Alex", role: "Backend Architect", color: "#3b82f6", status: "Coding main.js", isReal: false, id: "sim-alex" },
+    { name: "Sarah", role: "UI Designer", color: "#a855f7", status: "Reviewing utils.ts", isReal: false, id: "sim-sarah" },
+    { name: "Marcus", role: "Fullstack Eng.", color: "#22c55e", status: "Writing styles.css", isReal: false, id: "sim-marcus" }
+  ];
+
+  const combinedBuilders = [
+    ...realUsers,
+    ...simulatedUsers.filter(s => !realUsers.some(r => r.name.toLowerCase() === s.name.toLowerCase()))
+  ];
+
   const copyLink = () => {
     navigator.clipboard.writeText(inviteLink);
     alert("Invite link copied!");
@@ -140,13 +161,8 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
         <div className="mb-5 border-t border-zinc-850 pt-4">
           <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-3 px-1">Project Builders</p>
           <div className="space-y-2 overflow-y-auto max-h-[180px] custom-scrollbar">
-            {[
-              { name: "Alex", role: "Backend Architect", color: "#3b82f6", status: "Coding main.js" },
-              { name: "Sarah", role: "UI Designer", color: "#a855f7", status: "Reviewing utils.ts" },
-              { name: "Marcus", role: "Fullstack Eng.", color: "#22c55e", status: "Writing styles.css" },
-              { name: "You (Prashu)", role: "Project Owner", color: "#f97316", status: "Active Now" }
-            ].map(m => (
-              <div key={m.name} className="bg-zinc-950/80 border border-zinc-850/50 p-2.5 rounded-xl flex items-center justify-between hover:border-zinc-800 transition-colors">
+            {combinedBuilders.map(m => (
+              <div key={m.id || m.name} className="bg-zinc-950/80 border border-zinc-850/50 p-2.5 rounded-xl flex items-center justify-between hover:border-zinc-800 transition-colors">
                 <div className="flex items-center gap-2">
                   <div 
                     className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white"
@@ -155,7 +171,12 @@ export default function Sidebar({ users, roomId, files = {}, activeFile, onFileS
                     {m.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[11px] font-bold text-zinc-100">{m.name}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-zinc-100">{m.name}</span>
+                      {m.isReal && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" title="Connected Live" />
+                      )}
+                    </div>
                     <span className="text-[9px] text-zinc-500 font-medium">{m.role}</span>
                   </div>
                 </div>
