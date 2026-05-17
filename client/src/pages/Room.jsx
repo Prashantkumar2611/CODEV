@@ -6,6 +6,7 @@ import Output from "../components/Output";
 import socket from "../socket";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 const LANGUAGES = [
   { id: "nodejs", name: "javascript" },
@@ -19,6 +20,7 @@ const LANGUAGES = [
 export default function Room() {
   const { roomId } = useParams();
   const { user } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const username = user?.username || "Anonymous";
 
   const [files, setFiles] = useState({});
@@ -261,13 +263,27 @@ export default function Room() {
             </select>
           </div>
 
-          <button
-            onClick={runCode}
-            disabled={running}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-1.5 rounded-lg font-bold shadow-lg shadow-orange-500/10 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer text-sm"
-          >
-            {running ? "Running..." : "▶ Run"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-350 hover:text-white transition-all cursor-pointer flex items-center justify-center"
+              title={theme === 'light' ? 'Switch to Night Mode' : 'Switch to Day Mode'}
+            >
+              {theme === 'light' ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+              )}
+            </button>
+
+            <button
+              onClick={runCode}
+              disabled={running}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-1.5 rounded-lg font-bold shadow-lg shadow-orange-500/10 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer text-sm"
+            >
+              {running ? "Running..." : "▶ Run"}
+            </button>
+          </div>
         </div>
 
         {/* Editor + Output */}

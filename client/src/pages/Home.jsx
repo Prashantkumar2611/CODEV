@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function Home() {
   const [roomId, setRoomId] = useState("");
@@ -11,6 +12,7 @@ export default function Home() {
   
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     fetchProjects();
@@ -85,7 +87,19 @@ export default function Home() {
       <div className="absolute top-[-10%] left-[-10%] w-[30%] h-[30%] bg-orange-600/5 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-zinc-800/20 blur-[120px] rounded-full pointer-events-none"></div>
 
-      <div className="absolute top-6 right-6 flex flex-col items-end z-50">
+      <div className="absolute top-6 right-6 flex items-center gap-4 z-50">
+        <button 
+          onClick={toggleTheme}
+          className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center shadow-lg"
+          title={theme === 'light' ? 'Switch to Night Mode' : 'Switch to Day Mode'}
+        >
+          {theme === 'light' ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          )}
+        </button>
+
         <div className="relative group">
           <button 
             className="relative rounded-full ring-2 ring-zinc-800 hover:ring-orange-500 transition-all shadow-lg hover:shadow-orange-555/20 cursor-pointer"
